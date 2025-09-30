@@ -1,0 +1,412 @@
+<!-- Header -->
+    <!-- Header Bar -->
+    <div class="header-bar">
+      <div class="input-group">
+        <span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i></span>
+        <input type="text" class="form-control" placeholder="Search by Claim #, Client, Claimant Name" aria-label=""
+          aria-describedby="basic-addon1">
+      </div>
+      <button class="btn btn-success"><i class="fa-solid fa-file-excel me-1"></i> Export to Excel</button>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <!-- Task Summary Tiles -->
+        <div class="row g-2 mb-3">
+          <div class="col-md-2">
+            <label class="form-label">View</label>
+            <select class="form-select">
+              <option>My Tasks</option>
+            </select>
+          </div>
+        </div>
+        <div class="row g-2 mb-3">
+          <div class="col-md-2">
+            <div class="bg-light border p-3 text-center">
+              <div class="fs-4">10</div>
+              <div>All Open Tasks</div>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="bg-light border p-3 text-center">
+              <div class="fs-4">1</div>
+              <div>Due Today</div>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="bg-light border p-3 text-center">
+              <div class="fs-4">0</div>
+              <div>Overdue</div>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="bg-light border p-3 text-center">
+              <div class="fs-4">0</div>
+              <div>Closed Today</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="d-flex align-items-end flex-wrap gap-2 mb-4">
+          <div style="min-width: 230px;">
+            <select class="form-select">
+              <option>Client</option>
+            </select>
+          </div>
+          <div style="min-width: 230px;">
+            <select class="form-select">
+              <option>State</option>
+            </select>
+          </div>
+          <div style="min-width: 160px;">
+            <select class="form-select">
+              <option>Task Type</option>
+            </select>
+          </div>
+          <div style="min-width: 160px;">
+            <select class="form-select">
+              <option>Task Status</option>
+            </select>
+          </div>
+          <div style="min-width: 160px;">
+            <input class="form-control" placeholder="Claim number" />
+          </div>
+          <div style="min-width: 160px;">
+            <input class="form-control" type="date" placeholder="Due Date From" />
+          </div>
+          <div style="min-width: 160px;">
+            <input class="form-control" type="date" placeholder="Due Date To" />
+          </div>
+          <div>
+            <button class="btn btn-outline-secondary">Reset</button>
+          </div>
+        </div>
+
+
+        <!-- Task Table -->
+        <div class="container-table">
+          <table id="dashboardTable" class="table table-hover task-table">
+            <thead>
+              <tr>
+                <th style="width: 5px;"></th> <!-- Indicator column -->
+                <th>Nurse Name</th>
+                <th>Task Type</th>
+                <th>Account Name</th>
+                <th>Claimant Name</th>
+                <th>Work Status</th>
+                <th>Claim Number</th>
+                <th>Juris State</th>
+                <th>Task Status</th>
+                <th>Adjuster Name</th>
+                <th>Due Date</th>
+                <th>Assigned by</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="task-row urgent">
+                <td>
+                  <div class="status-indicator urgent"></div>
+                </td>
+                <td>John Davies</td>
+                <td>MMI</td>
+                <td>Archdioceses of New Orleans</td>
+                <td>MICHAEL JONES</td>
+                <td>MODDUTY</td>
+                <td><a href="#" class="claim-link" data-claim-id="25050M687291">25050M687291</a></td>
+                <td>CA</td>
+                <td>Open</td>
+                <td>John Pinkman</td>
+                <td>5/22/2025</td>
+                <td>Danielle Mayo</td>
+              </tr>
+              <tr class="task-row overdue">
+                <td>
+                  <div class="status-indicator overdue"></div>
+                </td>
+                <td>John Davies</td>
+                <td>FOLLOWUP</td>
+                <td>RYDER</td>
+                <td>JACK FULLER</td>
+                <td>TERM-NO</td>
+                <td>1M01M01773</td>
+                <td>TX</td>
+                <td>Open</td>
+                <td>Laura Megan</td>
+                <td>4/15/2025</td>
+                <td>Danielle Mayo</td>
+              </tr>
+              <tr class="task-row urgent">
+                <td>
+                  <div class="status-indicator overdue"></div>
+                </td>
+                <td>John Davies</td>
+                <td>MEDFAX</td>
+                <td>TSA</td>
+                <td>RANDY BANKS</td>
+                <td>MODDUTY</td>
+                <td>AR10743</td>
+                <td>CA</td>
+                <td>Assigned</td>
+                <td>Lisa Fuller</td>
+                <td>5/22/2025</td>
+                <td>Danielle Mayo</td>
+              </tr>
+              <tr class="task-row overdue">
+                <td>
+                  <div class="status-indicator overdue"></div>
+                </td>
+                <td>John Davies</td>
+                <td>NEWASSIGN</td>
+                <td>RYDER</td>
+                <td>JOHN KEHOE</td>
+                <td>OOW</td>
+                <td>3B435H29330</td>
+                <td>HI</td>
+                <td>Open</td>
+                <td>Brenda Jones</td>
+                <td>4/30/2025</td>
+                <td>Kelly Kuri</td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="status-indicator overdue"></div>
+                </td>
+                <td>John Davies</td>
+                <td>FOLLOWUP</td>
+                <td>Archdioceses of New Orleans</td>
+                <td>ROBERTO GUERRA</td>
+                <td>FULLDUTY</td>
+                <td>WC00743</td>
+                <td>TN</td>
+                <td>In Progress</td>
+                <td>Rose Perez</td>
+                <td>6/16/2025</td>
+                <td>Danielle Mayo</td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="status-indicator urgent"></div>
+                </td>
+                <td>John Davies</td>
+                <td>MEDFAX</td>
+                <td>RANDSTAD</td>
+                <td>TAMARA TUEVEDO</td>
+                <td>OOW</td>
+                <td>NJU89340012</td>
+                <td>FL</td>
+                <td>Assigned</td>
+                <td>Peter Silverman</td>
+                <td>7/18/2025</td>
+                <td>Kelly Kuri</td>
+              </tr>
+              <tr class="task-row urgent">
+                <td>
+                  <div class="status-indicator urgent"></div>
+                </td>
+                <td>John Davies</td>
+                <td>MMI</td>
+                <td>Archdioceses of New Orleans</td>
+                <td>MICHAEL JONES</td>
+                <td>MODDUTY</td>
+                <td>2016631</td>
+                <td>CA</td>
+                <td>Open</td>
+                <td>John Pinkman</td>
+                <td>5/22/2025</td>
+                <td>Danielle Mayo</td>
+              </tr>
+              <tr class="task-row overdue">
+                <td>
+                  <div class="status-indicator overdue"></div>
+                </td>
+                <td>John Davies</td>
+                <td>FOLLOWUP</td>
+                <td>RYDER</td>
+                <td>JACK FULLER</td>
+                <td>TERM-NO</td>
+                <td>1M01M01773</td>
+                <td>TX</td>
+                <td>Open</td>
+                <td>Laura Megan</td>
+                <td>4/15/2025</td>
+                <td>Danielle Mayo</td>
+              </tr>
+              <tr class="task-row urgent">
+                <td>
+                  <div class="status-indicator overdue"></div>
+                </td>
+                <td>John Davies</td>
+                <td>MEDFAX</td>
+                <td>TSA</td>
+                <td>RANDY BANKS</td>
+                <td>MODDUTY</td>
+                <td>AR10743</td>
+                <td>CA</td>
+                <td>Assigned</td>
+                <td>Lisa Fuller</td>
+                <td>5/22/2025</td>
+                <td>Danielle Mayo</td>
+              </tr>
+              <tr class="task-row overdue">
+                <td>
+                  <div class="status-indicator overdue"></div>
+                </td>
+                <td>John Davies</td>
+                <td>NEWASSIGN</td>
+                <td>RYDER</td>
+                <td>JOHN KEHOE</td>
+                <td>OOW</td>
+                <td>3B435H29330</td>
+                <td>HI</td>
+                <td>Open</td>
+                <td>Brenda Jones</td>
+                <td>4/30/2025</td>
+                <td>Kelly Kuri</td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="status-indicator overdue"></div>
+                </td>
+                <td>John Davies</td>
+                <td>FOLLOWUP</td>
+                <td>Archdioceses of New Orleans</td>
+                <td>ROBERTO GUERRA</td>
+                <td>FULLDUTY</td>
+                <td>WC00743</td>
+                <td>TN</td>
+                <td>In Progress</td>
+                <td>Rose Perez</td>
+                <td>6/16/2025</td>
+                <td>Danielle Mayo</td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="status-indicator urgent"></div>
+                </td>
+                <td>John Davies</td>
+                <td>MEDFAX</td>
+                <td>RANDSTAD</td>
+                <td>TAMARA TUEVEDO</td>
+                <td>OOW</td>
+                <td>NJU89340012</td>
+                <td>FL</td>
+                <td>Assigned</td>
+                <td>Peter Silverman</td>
+                <td>7/18/2025</td>
+                <td>Kelly Kuri</td>
+              </tr>
+              <tr class="task-row urgent">
+                <td>
+                  <div class="status-indicator urgent"></div>
+                </td>
+                <td>John Davies</td>
+                <td>MMI</td>
+                <td>Archdioceses of New Orleans</td>
+                <td>MICHAEL JONES</td>
+                <td>MODDUTY</td>
+                <td>2016631</td>
+                <td>CA</td>
+                <td>Open</td>
+                <td>John Pinkman</td>
+                <td>5/22/2025</td>
+                <td>Danielle Mayo</td>
+              </tr>
+              <tr class="task-row overdue">
+                <td>
+                  <div class="status-indicator overdue"></div>
+                </td>
+                <td>John Davies</td>
+                <td>FOLLOWUP</td>
+                <td>RYDER</td>
+                <td>JACK FULLER</td>
+                <td>TERM-NO</td>
+                <td>1M01M01773</td>
+                <td>TX</td>
+                <td>Open</td>
+                <td>Laura Megan</td>
+                <td>4/15/2025</td>
+                <td>Danielle Mayo</td>
+              </tr>
+              <tr class="task-row urgent">
+                <td>
+                  <div class="status-indicator overdue"></div>
+                </td>
+                <td>John Davies</td>
+                <td>MEDFAX</td>
+                <td>TSA</td>
+                <td>RANDY BANKS</td>
+                <td>MODDUTY</td>
+                <td>AR10743</td>
+                <td>CA</td>
+                <td>Assigned</td>
+                <td>Lisa Fuller</td>
+                <td>5/22/2025</td>
+                <td>Danielle Mayo</td>
+              </tr>
+              <tr class="task-row overdue">
+                <td>
+                  <div class="status-indicator overdue"></div>
+                </td>
+                <td>John Davies</td>
+                <td>NEWASSIGN</td>
+                <td>RYDER</td>
+                <td>JOHN KEHOE</td>
+                <td>OOW</td>
+                <td>3B435H29330</td>
+                <td>HI</td>
+                <td>Open</td>
+                <td>Brenda Jones</td>
+                <td>4/30/2025</td>
+                <td>Kelly Kuri</td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="status-indicator overdue"></div>
+                </td>
+                <td>John Davies</td>
+                <td>FOLLOWUP</td>
+                <td>Archdioceses of New Orleans</td>
+                <td>ROBERTO GUERRA</td>
+                <td>FULLDUTY</td>
+                <td>WC00743</td>
+                <td>TN</td>
+                <td>In Progress</td>
+                <td>Rose Perez</td>
+                <td>6/16/2025</td>
+                <td>Danielle Mayo</td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="status-indicator urgent"></div>
+                </td>
+                <td>John Davies</td>
+                <td>MEDFAX</td>
+                <td>RANDSTAD</td>
+                <td>TAMARA TUEVEDO</td>
+                <td>OOW</td>
+                <td>NJU89340012</td>
+                <td>FL</td>
+                <td>Assigned</td>
+                <td>Peter Silverman</td>
+                <td>7/18/2025</td>
+                <td>Kelly Kuri</td>
+              </tr>
+            </tbody>
+          </table>
+          <h6>Priority</h6>
+          <!-- Priority Legend -->
+          <div class="mt-2 mb-3 priority-legend d-flex align-items-center gap-4 flex-wrap">
+            <div><span class="priority-box" style="background-color: #ffcccc;"></span> Urgent Task</div>
+            <div><span class="priority-box" style="background-color: #ccf0ff;"></span> Overdue Task
+            </div>
+            <div><span class="priority-box border"></span> Routine Task</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+<script>
+
+  </script>

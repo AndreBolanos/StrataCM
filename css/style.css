@@ -1,0 +1,221 @@
+body {
+    background-color: #f5f5f5;
+}
+
+/* Shared Sidebar styles */
+.side-nav,
+.case-sidebar {
+    height: 100vh;
+    width: 200px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #214563;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    z-index: 1030;
+}
+
+.side-nav .nav-title,
+.case-sidebar .nav-title {
+    font-size: 1.2rem;
+    text-align: center;
+    font-weight: bold;
+    padding-top: 1rem;
+}
+
+.side-nav .nav-subtitle,
+.case-sidebar .nav-subtitle {
+    padding: 10px 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #d1d5db;
+}
+
+.side-nav .nav-menu,
+.side-nav .nav-menu-up,
+.case-sidebar .nav-menu,
+.case-sidebar .nav-menu-up {
+    border-top: 1px solid #fdfefe;
+}
+
+.side-nav .nav-link,
+.case-sidebar .nav-link,
+.side-nav .btn,
+.case-sidebar .btn {
+    color: #ffffff;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    font-size: 0.8rem;
+}
+
+.side-nav .nav-link:hover,
+.case-sidebar .nav-link:hover {
+    background-color: #fdfefe;
+    color: black;
+}
+
+.side-nav .nav-link.active,
+.case-sidebar .nav-link.active {
+    background-color: #fdfefe;
+    color: black;
+}
+
+.side-nav .nav-link i,
+.case-sidebar .nav-link i {
+    font-size: 1rem;
+    width: 20px;
+    text-align: center;
+}
+
+.side-nav .user-info,
+.case-sidebar .user-info {
+    padding: 15px;
+    border-top: 1px solid #fdfefe;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1rem;
+}
+
+.side-nav .user-info i,
+.case-sidebar .user-info i {
+    font-size: 1.3rem;
+    width: 30px;
+    text-align: center;
+}
+
+/* Header Bar */
+.header-bar {
+    position: fixed;
+    top: 0;
+    left: 200px;
+    right: 0;
+    height: 56px;
+    background-color: #eeeeee;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    z-index: 1020;
+}
+
+.header-bar .input-group {
+    max-width: 500px;
+}
+
+/* Main Content */
+.main-content {
+    margin-left: 200px;
+    margin-top: 56px;
+    padding: 20px;
+}
+
+/* Task Table Styling */
+.task-row.urgent {
+    background-color: #ffcccc !important;
+}
+
+.task-row.overdue {
+    background-color: #ccf0ff !important;
+}
+
+.priority-legend {
+    font-size: 0.875rem;
+}
+
+.priority-box {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    margin-right: 5px;
+}
+
+.status-indicator {
+    width: 5px;
+    height: 30px;
+    border-radius: 3px;
+    margin: auto 0;
+}
+
+.status-indicator.urgent {
+    background-color: #ffcccc !important;
+}
+
+.status-indicator.overdue {
+    background-color: #ccf0ff !important;
+}
+
+/* DataTables Overrides */
+.dataTables_wrapper .dataTables_paginate {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.dataTables_filter {
+    float: right !important;
+    text-align: right;
+}
+
+.dataTables_filter label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.dataTables_length {
+    float: left !important;
+    text-align: right;
+    margin-bottom: 1rem;
+}
+
+.dataTables_length label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+div.dataTables_wrapper div.dataTables_paginate {
+    padding-top: 20px;
+}
+
+/* Utility */
+.hidden {
+    display: none !important;
+}
+
+/* Shared sidebar transition */
+.side-nav,
+.case-sidebar {
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+/* Base state: sidebars are visible */
+.side-nav,
+.case-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 200px;
+  height: 100vh;
+  background-color: #214563;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  z-index: 1030;
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Hidden state: move left and fade */
+.sidebar-hidden {
+  opacity: 0;
+  transform: translateX(-100%);
+  pointer-events: none; /* prevent interaction */
+}
+

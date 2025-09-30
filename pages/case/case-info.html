@@ -1,0 +1,296 @@
+<style>
+    /* Light gray background for entire nav-pills row */
+    .nav-pills {
+        background-color: #f8f9fa;
+        /* light gray */
+        padding: 0.5rem;
+        border-radius: 0rem;
+    }
+
+    /* Make nav links look like tabs */
+    .nav-pills .nav-link {
+        color: #333;
+        background-color: transparent;
+        border-radius: 0rem;
+        transition: background-color 0.2s ease;
+    }
+
+    /* Active tab with gray background */
+    .nav-pills .nav-link.active {
+        background-color: #ced4da;
+        /* medium-light gray */
+        color: #000;
+        font-weight: 500;
+    }
+
+    /* Optional: hover effect */
+    .nav-pills .nav-link:hover {
+        background-color: #e2e6ea;
+    }
+</style>
+
+<div class="header-bar d-flex justify-content-between align-items-center px-3 py-2">
+  <!-- Left: Claim Number -->
+  <div class="d-flex align-items-center">
+    <strong class="me-2">Claim Number:</strong>
+    <span>25050M687291</span>
+  </div>
+
+  <!-- Center: Claimant Info -->
+  <div class="d-flex gap-4 text-center align-items-center">
+    <div><strong>Claimant Name:</strong> MICHAEL GAST</div>
+    <div><strong>Dispute:</strong> No</div>
+    <div><strong>State:</strong> IL</div>
+  </div>
+
+  <!-- Right: Buttons -->
+  <div class="d-flex gap-2 align-items-center me-2">
+    <button class="btn btn-success d-flex align-items-center" id="saveBtn">
+      <i class="bi bi-floppy2-fill me-2"></i> Save
+    </button>
+    <button class="btn btn-secondary d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#exitModal">
+      <i class="bi bi-box-arrow-right me-2"></i> Exit
+    </button>
+  </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-body">
+        <!-- Filters Row -->
+        <div class="d-flex justify-content-start align-items-center gap-3 mb-3">
+            <!-- Case Status -->
+            <div class="form-group">
+                <label for="caseStatus" class="form-label mb-0 me-1"><strong>Case Status</strong></label>
+                <select id="caseStatus" class="form-select form-select-sm" style="width: 200px;">
+                    <option value="open">Open</option>
+                    <option value="closed">Closed</option>
+                    <option value="pending">Pending</option>
+                </select>
+            </div>
+
+            <!-- Case Phase -->
+            <div class="form-group">
+                <label for="casePhase" class="form-label mb-0 me-1"><strong>Case Phase</strong></label>
+                <select id="casePhase" class="form-select form-select-sm" style="width: 200px;">
+                    <option value="investigation">Investigation</option>
+                    <option value="treatment">Treatment</option>
+                    <option value="resolution">Resolution</option>
+                </select>
+            </div>
+
+            <!-- Priority -->
+            <div class="form-group">
+                <label for="priority" class="form-label mb-0 me-1"><strong>Priority</strong></label>
+                <select id="priority" class="form-select form-select-sm" style="width: 200px;">
+                    <option value="low">Low</option>
+                    <option value="normal">Normal</option>
+                    <option value="high">High</option>
+                </select>
+            </div>
+        </div>
+
+
+        <ul class="nav nav-pills mb-3 p-0" id="caseTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="case-tab" data-bs-toggle="pill" data-bs-target="#case" type="button"
+                    role="tab">Case</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="claim-tab" data-bs-toggle="pill" data-bs-target="#claim" type="button"
+                    role="tab">Claim</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="injury-tab" data-bs-toggle="pill" data-bs-target="#injury" type="button"
+                    role="tab">Injury</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="attorney-tab" data-bs-toggle="pill" data-bs-target="#attorney"
+                    type="button" role="tab">Attorney</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="adjuster-tab" data-bs-toggle="pill" data-bs-target="#adjuster"
+                    type="button" role="tab">Adjuster</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="employer-tab" data-bs-toggle="pill" data-bs-target="#employer"
+                    type="button" role="tab">Employer</button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="caseTabsContent">
+            <div class="tab-pane fade show active" id="case" role="tabpanel" aria-labelledby="case-tab">
+                <div class="container-fluid mt-4">
+                    <h5><strong>Case Info</strong></h5>
+                    <hr>
+
+                    <form>
+                        <div class="row g-3">
+
+                            <!-- Row 1 -->
+                            <div class="col-sm-4">
+                                <label for="jurisdiction" class="form-label">Jurisdiction</label>
+                                <select id="jurisdiction" class="form-select form-select-sm">
+                                    <option selected>Choose...</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-4">
+                                <label for="caseReceived" class="form-label">Case Received Date</label>
+                                <input type="date" id="caseReceived" class="form-control form-control-sm">
+                            </div>
+
+                            <div class="col-sm-4">
+                                <label for="caseCreate" class="form-label">Case Create Date</label>
+                                <input type="date" id="caseCreate" class="form-control form-control-sm">
+                            </div>
+
+                            <!-- Row 2 -->
+                            <div class="col-sm-4">
+                                <label for="caseOpen" class="form-label">Case Open Date</label>
+                                <input type="date" id="caseOpen" class="form-control form-control-sm">
+                            </div>
+
+                            <div class="col-sm-4">
+                                <label for="caseClose" class="form-label">Case Close Date</label>
+                                <input type="date" id="caseClose" class="form-control form-control-sm">
+                            </div>
+
+                            <!-- Row 3 -->
+                            <div class="col-sm-4">
+                                <label for="caseManager" class="form-label">Case Manager</label>
+                                <select id="caseManager" class="form-select form-select-sm">
+                                    <option selected>Choose...</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-4">
+                                <label for="assistedBy" class="form-label">Assisted By</label>
+                                <select id="assistedBy" class="form-select form-select-sm">
+                                    <option selected>Choose...</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-4">
+                                <label for="ncmSupervisor" class="form-label">NCM Supervisor</label>
+                                <select id="ncmSupervisor" class="form-select form-select-sm">
+                                    <option selected>Choose...</option>
+                                </select>
+                            </div>
+
+                            <!-- Row 4 -->
+                            <div class="col-sm-8">
+                                <label for="caseClosureStatus" class="form-label">Case Closure Status</label>
+                                <select id="caseClosureStatus" class="form-select form-select-sm">
+                                    <option selected>Choose...</option>
+                                </select>
+                            </div>
+
+                            <!-- Row 5 -->
+                            <div class="col-sm-6">
+                                <label for="clientCaseNumber" class="form-label">Client Case Number</label>
+                                <input type="text" id="clientCaseNumber" class="form-control form-control-sm">
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label for="clientName" class="form-label">Client Name</label>
+                                <select id="clientName" class="form-select form-select-sm">
+                                    <option selected>Choose...</option>
+                                </select>
+                            </div>
+
+                            <!-- Row 6 -->
+                            <div class="col-sm-4">
+                                <label for="caseStatus" class="form-label">Case Status</label>
+                                <select id="caseStatus" class="form-select form-select-sm">
+                                    <option selected>Closed</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-4">
+                                <label for="casePhase" class="form-label">Case Phase</label>
+                                <select id="casePhase" class="form-select form-select-sm">
+                                    <option selected>Una</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-4">
+                                <label for="workStatus" class="form-label">Work Status</label>
+                                <select id="workStatus" class="form-select form-select-sm">
+                                    <option selected>Choose...</option>
+                                </select>
+                            </div>
+
+                            <!-- Row 7 -->
+                            <div class="col-sm-4">
+                                <label for="triageStart" class="form-label">Triage Start Date</label>
+                                <input type="date" id="triageStart" class="form-control form-control-sm">
+                            </div>
+
+                            <div class="col-sm-4">
+                                <label for="triageEnd" class="form-label">Triage End Date</label>
+                                <input type="date" id="triageEnd" class="form-control form-control-sm">
+                            </div>
+
+                            <div class="col-sm-4">
+                                <label for="caseLastUpdate" class="form-label">Case Last Update</label>
+                                <input type="date" id="caseLastUpdate" class="form-control form-control-sm">
+                            </div>
+                        </div>
+
+                        <!-- Inline Checkboxes + History Buttons in One Row -->
+                        <div class="d-flex justify-content-between align-items-center mt-4 flex-wrap">
+
+                            <!-- Checkboxes -->
+                            <div class="d-flex flex-wrap align-items-center gap-3">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="dispute">
+                                    <label class="form-check-label" for="dispute">Dispute on File</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="medically">
+                                    <label class="form-check-label" for="medically">Medically Managed</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="patientContact">
+                                    <label class="form-check-label" for="patientContact">Patient Contact Issue</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="litigation">
+                                    <label class="form-check-label" for="litigation">Litigation</label>
+                                </div>
+                            </div>
+
+                            <!-- History Buttons -->
+                            <div class="d-flex gap-2 mt-2 mt-sm-0">
+                                <button type="button" class="btn btn-primary btn-sm">View Case Status History</button>
+                                <button type="button" class="btn btn-primary btn-sm">View Case Phase History</button>
+                                <button type="button" class="btn btn-primary btn-sm">View Work Status History</button>
+                            </div>
+                        </div>
+
+
+                    </form>
+                </div>
+
+            </div>
+            <div class="tab-pane fade" id="claim" role="tabpanel" aria-labelledby="claim-tab">
+                <p>Claim tab content goes here.</p>
+            </div>
+            <div class="tab-pane fade" id="injury" role="tabpanel" aria-labelledby="injury-tab">
+                <p>Injury tab content goes here.</p>
+            </div>
+            <div class="tab-pane fade" id="attorney" role="tabpanel" aria-labelledby="attorney-tab">
+                <p>Attorney tab content goes here.</p>
+            </div>
+            <div class="tab-pane fade" id="adjuster" role="tabpanel" aria-labelledby="adjuster-tab">
+                <p>Adjuster tab content goes here.</p>
+            </div>
+            <div class="tab-pane fade" id="employer" role="tabpanel" aria-labelledby="employer-tab">
+                <p>Employer tab content goes here.</p>
+            </div>
+        </div>
+
+    </div>
+</div>
