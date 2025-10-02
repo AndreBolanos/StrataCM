@@ -192,7 +192,7 @@ div.dataTables_wrapper div.dataTables_paginate {
 /* Shared sidebar transition */
 .side-nav,
 .case-sidebar {
-  transition: transform 0.5s ease, opacity 0.5s ease;
+  transition: transform 0.6s ease, opacity 0.6s ease;
 }
 
 /* Base state: sidebars are visible */
