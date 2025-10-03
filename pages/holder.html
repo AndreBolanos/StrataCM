@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasks Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        .filter-section .form-control,
+        .filter-section .form-select {
+            min-width: 150px;
+        }
+        .table-responsive {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .task-details textarea {
+            resize: none;
+            height: 100px;
+        }
+    </style>
+</head>
+<body class="p-3">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4>Tasks</h4>
+        <button class="btn btn-primary">+ New Task</button>
+    </div>
+
+    <!-- Filters -->
+    <form class="filter-section mb-3">
+        <div class="row g-3">
+            <div class="col-md-3">
+                <label class="form-label">Task Type</label>
+                <select class="form-select">
+                    <option selected>Select task type(s)</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Task Status</label>
+                <select class="form-select">
+                    <option selected>Select status(es)</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Task Priority</label>
+                <select class="form-select">
+                    <option selected>Select priority</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Assigned To</label>
+                <select class="form-select">
+                    <option selected>Search and select nurse(s)</option>
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">Due Date From</label>
+                <input type="date" class="form-control">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Due Date To</label>
+                <input type="date" class="form-control">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Created Date From</label>
+                <input type="date" class="form-control">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Created Date To</label>
+                <input type="date" class="form-control">
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">Task ID</label>
+                <input type="text" class="form-control" placeholder="Enter task Id">
+            </div>
+        </div>
+
+        <div class="d-flex gap-2 mt-3">
+            <button type="submit" class="btn btn-primary">Search</button>
+            <button type="reset" class="btn btn-outline-primary">Reset</button>
+        </div>
+    </form>
+
+    <!-- Table -->
+    <div class="table-responsive mb-3">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Task ID</th>
+                    <th>Task Type</th>
+                    <th>Assigned To</th>
+                    <th>Task Status</th>
+                    <th>Task Priority</th>
+                    <th>Due Date</th>
+                    <th>Created By</th>
+                    <th>Created Date</th>
+                    <th>Modified By</th>
+                    <th>Modified Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Example rows -->
+                <tr>
+                    <td>T-2025-1000259</td>
+                    <td>Lorem Ipsum</td>
+                    <td>Lorem Ipsum</td>
+                    <td>Lorem Ipsum</td>
+                    <td>Lorem Ipsum</td>
+                    <td>6/26/2024 11:46 AM</td>
+                    <td>Lorem Ipsum</td>
+                    <td>6/26/2024 11:46 AM</td>
+                    <td>Lorem Ipsum</td>
+                    <td>6/26/2024 11:46 AM</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
+                        <button class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></button>
+                    </td>
+                </tr>
+                <!-- Repeat similar rows as needed -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <label>Show 
+                <select class="form-select d-inline-block w-auto">
+                    <option>25</option>
+                    <option>50</option>
+                    <option>100</option>
+                </select> 
+                items per page
+            </label>
+        </div>
+        <nav>
+            <ul class="pagination mb-0">
+                <li class="page-item disabled"><a class="page-link" href="#">«</a></li>
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">»</a></li>
+            </ul>
+        </nav>
+        <div>Showing 1-25 of 25 Items</div>
+    </div>
+
+    <!-- Task Details -->
+    <div class="task-details">
+        <label class="form-label">Task Details</label>
+        <textarea class="form-control" placeholder="Task details will appear here"></textarea>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

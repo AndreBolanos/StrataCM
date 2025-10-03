@@ -8,6 +8,10 @@ function loadPage(page) {
       initDashboard();
     }
 
+    if (page === 'pages/case/case-tasks.html') {
+      initTaskDetail();
+    }
+
     const cleanPage = page.split('?')[0];
 
     if (cleanPage.startsWith('pages/case/')) {
@@ -32,6 +36,9 @@ function showMainSidebar() {
 
 function highlightCaseSidebarLink(cleanPage) {
   $('#caseSidebar .nav-link').removeClass('active');
+  if (cleanPage == 'pages/case/task-detail.html') {
+    cleanPage = 'pages/case/case-tasks.html';
+  }
 
   $('#caseSidebar .nav-link').each(function () {
     const linkPage = $(this).data('page');
@@ -53,6 +60,7 @@ function initDashboard() {
     columnDefs: [{ orderable: false, targets: 0 }],
     order: [[10, 'desc']],
     scrollY: '42vh',
+    scrollX: true,
     scrollCollapse: true,
     paging: true,
     searching: true,
@@ -62,6 +70,7 @@ function initDashboard() {
   // Handle claim link clicks
   // Global variable to hold current claim
   window.currentClaimId = null;
+  window.currentTaskId = null;
 
   // Handle claim link clicks
   $(document).on('click', '.claim-link', function (e) {
@@ -69,6 +78,29 @@ function initDashboard() {
     const claimId = $(this).data('claim-id');
     window.currentClaimId = claimId;
     loadPage("pages/case/case-info.html");
+  });
+
+  $(document).on('click', '.task-link', function (e) {
+    e.preventDefault();
+    const taskId = $(this).data('task-id');
+    window.currentTaskId = taskId;
+    const claimId = $(this).data('claim-id');
+    window.currentClaimId = claimId;  // store the task number globally
+    loadPage("pages/case/task-detail.html"); // 👈 go to task detail page
+  });
+
+}
+
+function initTaskDetail() {
+  $('#taskListTable').DataTable({
+    columnDefs: [{ orderable: false, targets: 0 }],
+    order: [[5, 'desc']],
+    scrollY: '42vh',
+    scrollX: true,
+    scrollCollapse: true,
+    paging: true,
+    searching: true,
+    ordering: true
   });
 
 }
@@ -99,7 +131,7 @@ $(document).ready(function () {
   loadPage('pages/dashboard.html');
 
   // Sidebar nav link click (main + case)
-  $(document).on('click', '.nav-link', function (e) {
+  $(document).on('click', '.nav-link, .nav-trigger', function (e){
     e.preventDefault();
     $('.nav-link').removeClass('active');
     $(this).addClass('active');
@@ -150,7 +182,7 @@ function loadTableTaskDate() {
 
     row.innerHTML = `
       <td><div class="status-indicator ${task.status}"></div></td>
-      <td>${task.taskNumber}</td>
+      <td><a href="#" class="task-link" data-task-id="${task.taskNumber}" data-claim-id="${task.claimNumber}">${task.taskNumber}</a></td>
       <td>${task.taskType}</td>
       <td>${task.clientName}</td>
       <td>${task.claimantName}</td>
@@ -679,7 +711,13 @@ window.tasksData = [
 // On page load, set claim number
 function fetchClaimNumber() {
   if (window.currentClaimId) {
-      document.getElementById("claimNumber").textContent = window.currentClaimId;
-    }
+    document.getElementById("claimNumber").textContent = window.currentClaimId;
+  }
+}
+
+function fetchTaskNumber() {
+  if (window.currentTaskId) {
+    document.getElementById("taskNumber-value").value = window.currentTaskId;
+  }
 }
 

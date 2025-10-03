@@ -1,0 +1,173 @@
+<style>
+    /* Light gray background for entire nav-pills row */
+    .nav-pills {
+        background-color: #f8f9fa;
+        /* light gray */
+        padding: 0.5rem;
+        border-radius: 0rem;
+    }
+
+    /* Make nav links look like tabs */
+    .nav-pills .nav-link {
+        color: #333;
+        background-color: transparent;
+        border-radius: 0rem;
+        transition: background-color 0.2s ease;
+    }
+
+    /* Active tab with gray background */
+    .nav-pills .nav-link.active {
+        background-color: #ced4da;
+        /* medium-light gray */
+        color: #000;
+        font-weight: 500;
+    }
+
+    /* Optional: hover effect */
+    .nav-pills .nav-link:hover {
+        background-color: #e2e6ea;
+    }
+</style>
+
+<div class="header-bar d-flex justify-content-between align-items-center px-3 py-2">
+    <!-- Left: Claim Number -->
+    <div class="d-flex align-items-center">
+        <strong class="me-2">Claim Number:</strong>
+        <span id="claimNumber"></span>
+    </div>
+
+    <!-- Center: Claimant Info -->
+    <div class="d-flex gap-4 text-center align-items-center">
+        <div><strong>Claimant Name:</strong> MICHAEL GAST</div>
+        <div><strong>Dispute:</strong> No</div>
+        <div><strong>State:</strong> IL</div>
+    </div>
+
+    <!-- Right: Buttons -->
+    <div class="d-flex gap-2 align-items-center me-2">
+        <button class="btn btn-success d-flex align-items-center" id="saveBtn">
+            <i class="bi bi-floppy2-fill me-2"></i> Save
+        </button>
+        <button class="btn btn-secondary d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#exitModal">
+            <i class="bi bi-box-arrow-right me-2"></i> Exit
+        </button>
+    </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4>Tasks</h4>
+        <button class="btn btn-primary">+ New Task</button>
+    </div>
+    <hr>
+
+    <!-- Filters -->
+    <form class="filter-section mb-3">
+        <div class="row g-3">
+            <div class="col-md-3">
+                <label class="form-label">Task Type</label>
+                <select class="form-select">
+                    <option selected>Select task type(s)</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Task Status</label>
+                <select class="form-select">
+                    <option selected>Select status(es)</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Task Priority</label>
+                <select class="form-select">
+                    <option selected>Select priority</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Assigned To</label>
+                <select class="form-select">
+                    <option selected>Search and select nurse(s)</option>
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">Due Date From</label>
+                <input type="date" class="form-control">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Due Date To</label>
+                <input type="date" class="form-control">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Created Date From</label>
+                <input type="date" class="form-control">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Created Date To</label>
+                <input type="date" class="form-control">
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">Task ID</label>
+                <input type="text" class="form-control" placeholder="Enter task Id">
+            </div>
+        </div>
+
+        <div class="d-flex d-flex justify-content-center gap-2 mt-3">
+            <button type="submit" class="btn btn-primary">Search</button>
+            <button type="reset" class="btn btn-outline-primary">Reset</button>
+        </div>
+    </form>
+
+    <!-- Table -->
+    <div class="table-responsive mb-3">
+        <table id="taskListTable" class="table table-hover task-table">
+            <thead class="table-light">
+                <tr>
+                    <th>Task ID</th>
+                    <th>Task Type</th>
+                    <th>Assigned To</th>
+                    <th>Task Status</th>
+                    <th>Task Priority</th>
+                    <th>Due Date</th>
+                    <th>Created By</th>
+                    <th>Created Date</th>
+                    <th>Modified By</th>
+                    <th>Modified Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Example rows -->
+                <tr>
+                    <td>T-2025-1000259</td>
+                    <td>Lorem Ipsum</td>
+                    <td>Lorem Ipsum</td>
+                    <td>Lorem Ipsum</td>
+                    <td>Lorem Ipsum</td>
+                    <td>6/26/2024 11:46 AM</td>
+                    <td>Lorem Ipsum</td>
+                    <td>6/26/2024 11:46 AM</td>
+                    <td>Lorem Ipsum</td>
+                    <td>6/26/2024 11:46 AM</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
+                        <button class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></button>
+                    </td>
+                </tr>
+                <!-- Repeat similar rows as needed -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Task Details -->
+    <div class="task-details">
+        <label class="form-label">Task Details</label>
+        <textarea class="form-control" placeholder="Task details will appear here"></textarea>
+    </div>
+  </div>
+</div>
+
+<script>
+fetchClaimNumber();
+</script>
