@@ -11,6 +11,30 @@
     overflow: hidden;
   }
 
+  .table-responsive {
+    overflow-x: auto;
+    /* Bootstrap handles horizontal scroll */
+  }
+
+  /* Keep header visible while scrolling vertically */
+  .table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background-color: #f8f9fa;
+    /* Matches Bootstrap .table-light */
+  }
+
+  /* Optional: improve scrollbar look */
+  .table-responsive::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+  }
+
+  .table-responsive::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+  }
 </style>
 
 <!-- Header -->
@@ -100,11 +124,11 @@
 
 
     <!-- Task Table -->
-    <div class="table-responsive">
-      <table id="dashboardTable" class="table table-hover task-table">
-        <thead>
+    <div class="table-responsive mb-2" style="max-height: 50vh; overflow-y: auto;">
+      <table id="dashboardTable" class="table table-hover align-middle mb-0 task-table">
+        <thead class="table-light sticky-top">
           <tr>
-            <th style="width: 5px;"></th> <!-- Indicator column -->
+            <th style="width: 5px;"></th>
             <th>Task Number</th>
             <th>Task Type</th>
             <th>Client Name</th>
@@ -120,24 +144,25 @@
           </tr>
         </thead>
         <tbody>
-          <!-- Data rows will be inserted here by JavaScript -->
+          <!-- Data rows injected dynamically -->
         </tbody>
       </table>
+    </div>
 
-      <!-- Load external data and rendering script -->
-      <!-- <script src="tasks-data.js"></script>
+    <!-- Load external data and rendering script -->
+    <!-- <script src="tasks-data.js"></script>
       <script src="tasks-render.js"></script> -->
 
-      <h6>Priority</h6>
-      <!-- Priority Legend -->
-      <div class="mt-2 mb-3 priority-legend d-flex align-items-center gap-4 flex-wrap">
-        <div><span class="priority-box" style="background-color: #ffcccc;"></span> Urgent Task</div>
-        <div><span class="priority-box" style="background-color: #ccf0ff;"></span> Overdue Task
-        </div>
-        <div><span class="priority-box border"></span> Routine Task</div>
+    <h6 class="mt-2">Priority</h6>
+    <!-- Priority Legend -->
+    <div class="mt-2 mb-3 priority-legend d-flex align-items-center gap-4 flex-wrap">
+      <div><span class="priority-box" style="background-color: #ffcccc;"></span> Urgent Task</div>
+      <div><span class="priority-box" style="background-color: #ccf0ff;"></span> Overdue Task
       </div>
-
+      <div><span class="priority-box border"></span> Routine Task</div>
     </div>
+
+
   </div>
 </div>
 

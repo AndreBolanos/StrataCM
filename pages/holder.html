@@ -1,58 +1,137 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Page Under Construction</title>
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-  >
-  <style>
-    body {
-      background-color: #f8f9fa;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-    }
-    .construction-card {
-      max-width: 600px;
-      background: white;
-      border-radius: 1rem;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-      padding: 2rem;
-    }
-    .construction-card img {
-      width: 100%;
-      max-width: 300px;
-      margin-bottom: 1.5rem;
-    }
-  </style>
-</head>
-<body>
-
-  <div class="construction-card">
-    <img
-      src="https://undraw.co/api/illustrations/under-construction?color=ffd54f"
-      alt="Under Construction Illustration"
-      class="img-fluid mx-auto d-block"
-    >
-    <h1 class="fw-bold text-warning mb-3">Page Under Construction</h1>
-    <p class="text-muted mb-4">
-      We're working hard to bring this page to life.  
-      Please check back soon!
-    </p>
-    <a href="/" class="btn btn-outline-warning">
-      <i class="bi bi-arrow-left"></i> Go Back Home
-    </a>
+<form id="taskForm">
+  <div class="row g-3 form-section">
+    <div class="col-md-2">
+      <label class="form-label">Task Created By</label>
+      <input type="text" class="form-control" value="Andrew Doe" disabled>
+    </div>
+    <div class="col-md-2">
+      <label class="form-label">Task Created Date</label>
+      <input type="text" class="form-control" value="09/02/2024 08:00 AM" disabled>
+    </div>
+    <div class="col-md-2">
+      <label class="form-label">Task Modified By</label>
+      <input type="text" class="form-control" value="John Davies" disabled>
+    </div>
+    <div class="col-md-2">
+      <label class="form-label">Task Modified Date</label>
+      <input type="text" class="form-control" value="09/08/2024 01:46 PM" disabled>
+    </div>
+    <div class="col-md-2">
+      <label class="form-label">Task Due Date</label>
+      <input type="text" class="form-control" value="09/09/2024 08:00 AM" disabled>
+    </div>
+    <div class="col-md-2">
+      <label class="form-label">Task Completed Date</label>
+      <input type="text" class="form-control" placeholder="MM/DD/YYYY">
+    </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
-  >
-</body>
-</html>
+  <div class="row g-3 form-section">
+    <div class="col-md-3">
+      <label class="form-label">Task Type</label>
+      <select class="form-select mandatoryINP">
+        <option selected>APPT</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Task Status</label>
+      <select id="taskStatus" class="form-select mandatoryINP">
+        <option selected>In Progress</option>
+        <option>Completed</option>
+        <option>Pending</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Task Priority</label>
+      <select class="form-select mandatoryINP">
+        <option selected>Routine</option>
+        <option>High</option>
+        <option>Low</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Assigned To</label>
+      <select class="form-select mandatoryINP">
+        <option selected>MSS Group</option>
+        <option>John Davies</option>
+        <option>Laura Smith</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="row g-3 form-section mt-2">
+    <div class="col-12">
+      <label class="form-label">Task Details</label>
+      <textarea class="form-control" rows="4">Create appt for physical therapy 5/30/25</textarea>
+    </div>
+  </div>
+
+  <div class="d-flex mt-3">
+    <button type="button" class="btn btn-sm btn-primary">+ Create new Note</button>
+    <button type="button" class="btn btn-sm btn-secondary ms-auto nav-trigger"
+      data-page="pages/case/case-tasks.html" style="width: 100px;">
+      <i class="bi bi-arrow-left me-1"></i>Exit Task
+    </button>
+  </div>
+</form>
+
+<!-- ✅ Confirmation Modal -->
+<div class="modal fade" id="completeTaskModal" tabindex="-1" aria-labelledby="completeTaskLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="completeTaskLabel">Complete Task?</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Have all related notes been entered for this task?
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="confirmCompleteBtn" class="btn btn-success">Yes, All Notes Entered</button>
+        <button type="button" id="createNoteBtn" class="btn btn-outline-primary" data-bs-dismiss="modal">No, Create Note</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const taskStatus = document.getElementById('taskStatus');
+  const completeTaskModal = new bootstrap.Modal(document.getElementById('completeTaskModal'));
+  const confirmCompleteBtn = document.getElementById('confirmCompleteBtn');
+  const createNoteBtn = document.getElementById('createNoteBtn');
+
+  // When user selects "Completed"
+  taskStatus.addEventListener('change', () => {
+    if (taskStatus.value === 'Completed') {
+      completeTaskModal.show();
+    }
+  });
+
+  // If user confirms "All Notes Entered"
+  confirmCompleteBtn.addEventListener('click', () => {
+    completeTaskModal.hide();
+
+    // Disable all form fields (make read-only)
+    document.querySelectorAll('#taskForm input, #taskForm select, #taskForm textarea')
+      .forEach(el => el.setAttribute('disabled', true));
+
+    // Optionally set completed date automatically
+    const completedDateInput = document.querySelector('input[placeholder="MM/DD/YYYY"]');
+    if (completedDateInput) {
+      const now = new Date();
+      const formattedDate = now.toLocaleDateString('en-US') + ' ' +
+                            now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+      completedDateInput.value = formattedDate;
+    }
+
+    // Optionally trigger task finalization logic here...
+  });
+
+  // If user clicks "Create Note"
+  createNoteBtn.addEventListener('click', () => {
+    // Show your "New Note" modal here
+    const newNoteModal = new bootstrap.Modal(document.getElementById('newNoteModal'));
+    newNoteModal.show();
+  });
+</script>

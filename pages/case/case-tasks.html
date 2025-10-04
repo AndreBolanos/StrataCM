@@ -27,8 +27,41 @@
     .nav-pills .nav-link:hover {
         background-color: #e2e6ea;
     }
-    .form-label{
-        margin-bottom: 0.3rem;
+
+    .form-label {
+        margin-bottom: 0.2rem;
+    }
+
+    table.dataTable thead th {
+        white-space: nowrap;
+        /* keep headers in one line */
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+        /* Bootstrap handles horizontal scroll */
+    }
+
+    /* Keep header visible while scrolling vertically */
+    .table thead th {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        background-color: #f8f9fa;
+        /* Matches Bootstrap .table-light */
+    }
+
+    /* Optional: improve scrollbar look */
+    .table-responsive::-webkit-scrollbar {
+        height: 8px;
+        width: 8px;
+    }
+
+    .table-responsive::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.2);
+        border-radius: 4px;
     }
 </style>
 
@@ -47,114 +80,117 @@
     </div>
 
     <!-- Right: Buttons -->
-    <div class="d-flex gap-2 align-items-center me-2">
-        <button class="btn btn-success d-flex align-items-center" id="saveBtn">
+    <div class="d-flex gap-2 justify-content-center me-2">
+        <button class="btn btn-sm btn-success d-flex align-items-center justify-content-center" id="saveBtn"
+            style="width: 100px;">
             <i class="bi bi-floppy2-fill me-2"></i> Save
         </button>
-        <button class="btn btn-secondary d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#exitModal">
+        <button class="btn btn-sm btn-secondary d-flex align-items-center justify-content-center" data-bs-toggle="modal"
+            data-bs-target="#exitModal" style="width: 100px;">
             <i class="bi bi-box-arrow-right me-2"></i> Exit
         </button>
     </div>
 </div>
 
 <div class="card">
-  <div class="card-body">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4>Tasks</h4>
-        <button class="btn btn-primary">+ New Task</button>
-    </div>
-    <hr>
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5>Tasks</h5>
+            <button class="btn btn-sm btn-primary" style="width: 100px;">+ New Task</button>
+        </div>
+        <hr>
 
-    <!-- Filters -->
-    <form class="filter-section mb-3">
-        <div class="row gx-3 gy-2">
-            <div class="col-md-3">
-                <label class="form-label">Task Type</label>
-                <select class="form-select">
-                    <option selected>Select task type(s)</option>
-                </select>
-            </div>
-            <div class="col-md-3">
-                <label class="form-label">Task Status</label>
-                <select class="form-select">
-                    <option selected>Select status(es)</option>
-                </select>
-            </div>
-            <div class="col-md-3">
-                <label class="form-label">Task Priority</label>
-                <select class="form-select">
-                    <option selected>Select priority</option>
-                </select>
-            </div>
-            <div class="col-md-3">
-                <label class="form-label">Assigned To</label>
-                <select class="form-select">
-                    <option selected>Search and select nurse(s)</option>
-                </select>
+        <!-- Filters -->
+        <form class="filter-section mb-3">
+            <div class="row gx-2 gy-2">
+                <div class="col-md-3">
+                    <label class="form-label form-label-sm">Task Type</label>
+                    <select class="form-select form-select-sm">
+                        <option selected>Select task type(s)</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label form-label-sm">Task Status</label>
+                    <select class="form-select form-select-sm">
+                        <option selected>Select status(es)</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label form-label-sm">Task Priority</label>
+                    <select class="form-select form-select-sm">
+                        <option selected>Select priority</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label form-label-sm">Assigned To</label>
+                    <select class="form-select form-select-sm">
+                        <option selected>Search and select nurse(s)</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label form-label-sm">Due Date From</label>
+                    <input type="date" class="form-control form-control-sm">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label form-label-sm">Due Date To</label>
+                    <input type="date" class="form-control form-control-sm">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label form-label-sm">Created Date From</label>
+                    <input type="date" class="form-control form-control-sm">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label form-label-sm">Created Date To</label>
+                    <input type="date" class="form-control form-control-sm">
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label form-label-sm">Task ID</label>
+                    <input type="text" class="form-control form-control-sm" placeholder="Enter task Id">
+                </div>
             </div>
 
-            <div class="col-md-3">
-                <label class="form-label">Due Date From</label>
-                <input type="date" class="form-control">
+            <div class="d-flex justify-content-center gap-2 mt-3">
+                <button type="submit" class="btn btn-sm btn-primary" style="width: 100px;">Search</button>
+                <button type="reset" class="btn btn-sm btn-outline-primary" style="width: 100px;">Reset</button>
             </div>
-            <div class="col-md-3">
-                <label class="form-label">Due Date To</label>
-                <input type="date" class="form-control">
-            </div>
-            <div class="col-md-3">
-                <label class="form-label">Created Date From</label>
-                <input type="date" class="form-control">
-            </div>
-            <div class="col-md-3">
-                <label class="form-label">Created Date To</label>
-                <input type="date" class="form-control">
-            </div>
+        </form>
 
-            <div class="col-md-3">
-                <label class="form-label">Task ID</label>
-                <input type="text" class="form-control" placeholder="Enter task Id">
-            </div>
+
+        <!-- Table -->
+        <div class="table-responsive mb-2" style="max-height: 50vh; overflow-y: auto;">
+            <table id="taskListTable" class="table table-hover align-middle mb-0 task-table">
+                <thead class="table-light sticky-top">
+                    <tr>
+                        <th>Task ID</th>
+                        <th>Task Type</th>
+                        <th>Assigned To</th>
+                        <th>Task Status</th>
+                        <th>Task Priority</th>
+                        <th>Due Date</th>
+                        <th>Created By</th>
+                        <th>Created Date</th>
+                        <th>Modified By</th>
+                        <th>Modified Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
         </div>
 
-        <div class="d-flex d-flex justify-content-center gap-2 mt-3">
-            <button type="submit" class="btn btn-primary" style="width: 120px;">Search</button>
-            <button type="reset" class="btn btn-outline-primary" style="width: 120px;">Reset</button>
+        <!-- Task Details -->
+        <div class="task-details mt-2">
+            <label class="form-label">Task Details</label>
+            <textarea class="form-control" rows="4" placeholder="Task details will appear here"></textarea>
         </div>
-    </form>
-
-    <!-- Table -->
-    <div class="mb-3">
-        <table id="taskListTable" class="table table-hover task-table">
-            <thead class="table-light">
-                <tr>
-                    <th>Task ID</th>
-                    <th>Task Type</th>
-                    <th>Assigned To</th>
-                    <th>Task Status</th>
-                    <th>Task Priority</th>
-                    <th>Due Date</th>
-                    <th>Created By</th>
-                    <th>Created Date</th>
-                    <th>Modified By</th>
-                    <th>Modified Date</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                
-            </tbody>
-        </table>
     </div>
-
-    <!-- Task Details -->
-    <div class="task-details">
-        <label class="form-label">Task Details</label>
-        <textarea class="form-control" rows="5" placeholder="Task details will appear here"></textarea>
-    </div>
-  </div>
 </div>
 
 <script>
-fetchClaimNumber();
-loadTableMainTaskList();
+    fetchClaimNumber();
+    loadTableMainTaskList();
 </script>

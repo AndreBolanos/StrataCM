@@ -59,14 +59,14 @@ function initDashboard() {
   $('#dashboardTable').DataTable({
     columnDefs: [{ orderable: false, targets: 0 }],
     order: [[10, 'desc']],
-    scrollY: '42vh',
-    scrollX: false,
-    responsive: false,
-    scrollCollapse: true,
     paging: true,
     searching: true,
-    ordering: true
+    ordering: true,
+    responsive: false,
+    scrollCollapse: true
   });
+
+
 
   // Handle claim link clicks
   // Global variable to hold current claim
@@ -96,13 +96,11 @@ function initTaskDetail() {
   $('#taskListTable').DataTable({
     columnDefs: [{ orderable: false, targets: 0 }],
     order: [[5, 'desc']],
-    scrollY: '42vh',
-    scrollX: true,
-    scrollCollapse: true,
-    responsive: true,
     paging: true,
     searching: true,
-    ordering: true
+    ordering: true,
+    responsive: false,
+    scrollCollapse: true
   });
 
 }
@@ -133,7 +131,7 @@ $(document).ready(function () {
   loadPage('pages/dashboard.html');
 
   // Sidebar nav link click (main + case)
-  $(document).on('click', '.nav-link, .nav-trigger', function (e){
+  $(document).on('click', '.nav-link, .nav-trigger', function (e) {
     e.preventDefault();
     $('.nav-link').removeClass('active');
     $(this).addClass('active');
@@ -754,7 +752,7 @@ function loadTableMainTaskList() {
 
     // Each row’s HTML
     row.innerHTML = `
-      <td><a href="#" class="task-link" data-task-id="${task.taskNumber}" data-claim-id="${task.claimNumber}">${task.taskNumber}</a></td>
+      <td>${task.taskNumber}</td>
       <td>${task.taskType}</td>
       <td>${task.nurseAssigned}</td>
       <td>${task.taskStatus}</td>
@@ -769,7 +767,7 @@ function loadTableMainTaskList() {
           <button class="btn btn-outline-primary view-task" data-task-id="${task.taskNumber}" title="View Task">
             <i class="bi bi-eye"></i>
           </button>
-          <button class="btn btn-outline-secondary edit-task" data-task-id="${task.taskNumber}" title="Edit Task">
+          <button class="btn btn-outline-secondary edit-task task-link" data-task-id="${task.taskNumber}" data-claim-id="${task.claimNumber}" title="Edit Task">
             <i class="bi bi-pencil"></i>
           </button>
         </div>
