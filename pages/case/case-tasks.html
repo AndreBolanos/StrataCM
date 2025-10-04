@@ -27,6 +27,9 @@
     .nav-pills .nav-link:hover {
         background-color: #e2e6ea;
     }
+    .form-label{
+        margin-bottom: 0.3rem;
+    }
 </style>
 
 <div class="header-bar d-flex justify-content-between align-items-center px-3 py-2">
@@ -64,7 +67,7 @@
 
     <!-- Filters -->
     <form class="filter-section mb-3">
-        <div class="row g-3">
+        <div class="row gx-3 gy-2">
             <div class="col-md-3">
                 <label class="form-label">Task Type</label>
                 <select class="form-select">
@@ -114,13 +117,13 @@
         </div>
 
         <div class="d-flex d-flex justify-content-center gap-2 mt-3">
-            <button type="submit" class="btn btn-primary">Search</button>
-            <button type="reset" class="btn btn-outline-primary">Reset</button>
+            <button type="submit" class="btn btn-primary" style="width: 120px;">Search</button>
+            <button type="reset" class="btn btn-outline-primary" style="width: 120px;">Reset</button>
         </div>
     </form>
 
     <!-- Table -->
-    <div class="table-responsive mb-3">
+    <div class="mb-3">
         <table id="taskListTable" class="table table-hover task-table">
             <thead class="table-light">
                 <tr>
@@ -138,24 +141,7 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- Example rows -->
-                <tr>
-                    <td>T-2025-1000259</td>
-                    <td>Lorem Ipsum</td>
-                    <td>Lorem Ipsum</td>
-                    <td>Lorem Ipsum</td>
-                    <td>Lorem Ipsum</td>
-                    <td>6/26/2024 11:46 AM</td>
-                    <td>Lorem Ipsum</td>
-                    <td>6/26/2024 11:46 AM</td>
-                    <td>Lorem Ipsum</td>
-                    <td>6/26/2024 11:46 AM</td>
-                    <td>
-                        <button class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
-                        <button class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></button>
-                    </td>
-                </tr>
-                <!-- Repeat similar rows as needed -->
+                
             </tbody>
         </table>
     </div>
@@ -163,11 +149,12 @@
     <!-- Task Details -->
     <div class="task-details">
         <label class="form-label">Task Details</label>
-        <textarea class="form-control" placeholder="Task details will appear here"></textarea>
+        <textarea class="form-control" rows="5" placeholder="Task details will appear here"></textarea>
     </div>
   </div>
 </div>
 
 <script>
 fetchClaimNumber();
+loadTableMainTaskList();
 </script>

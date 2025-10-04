@@ -60,7 +60,8 @@ function initDashboard() {
     columnDefs: [{ orderable: false, targets: 0 }],
     order: [[10, 'desc']],
     scrollY: '42vh',
-    scrollX: true,
+    scrollX: false,
+    responsive: false,
     scrollCollapse: true,
     paging: true,
     searching: true,
@@ -98,6 +99,7 @@ function initTaskDetail() {
     scrollY: '42vh',
     scrollX: true,
     scrollCollapse: true,
+    responsive: true,
     paging: true,
     searching: true,
     ordering: true
@@ -719,5 +721,62 @@ function fetchTaskNumber() {
   if (window.currentTaskId) {
     document.getElementById("taskNumber-value").value = window.currentTaskId;
   }
+}
+
+
+function loadTableMainTaskList() {
+  const tbody = document.querySelector("#taskListTable tbody");
+  tbody.innerHTML = ""; // clear old rows
+
+  // Example: map statuses to priorities for realism
+  const priorityMap = {
+    urgent: "High",
+    overdue: "Critical",
+    pending: "Normal",
+  };
+
+  window.tasksData.forEach((task, index) => {
+    const row = document.createElement("tr");
+
+    // Fake realistic created/modified timestamps
+    const createdDate = new Date(2025, 3, 10 + (index % 15), 9, 30);
+    const modifiedDate = new Date(createdDate.getTime() + 1000 * 60 * 60 * 24 * (index % 5));
+
+    const formatDate = (date) =>
+      date.toLocaleString("en-US", {
+        month: "numeric",
+        day: "numeric",
+        year: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+      });
+
+    // Each row’s HTML
+    row.innerHTML = `
+      <td><a href="#" class="task-link" data-task-id="${task.taskNumber}" data-claim-id="${task.claimNumber}">${task.taskNumber}</a></td>
+      <td>${task.taskType}</td>
+      <td>${task.nurseAssigned}</td>
+      <td>${task.taskStatus}</td>
+      <td>${priorityMap[task.status] || "Normal"}</td>
+      <td>${formatDate(new Date(task.dueDate))}</td>
+      <td>${task.assignedBy}</td>
+      <td>${formatDate(createdDate)}</td>
+      <td>${task.adjusterName}</td>
+      <td>${formatDate(modifiedDate)}</td>
+      <td>
+        <div class="btn-group btn-group-sm" role="group">
+          <button class="btn btn-outline-primary view-task" data-task-id="${task.taskNumber}" title="View Task">
+            <i class="bi bi-eye"></i>
+          </button>
+          <button class="btn btn-outline-secondary edit-task" data-task-id="${task.taskNumber}" title="Edit Task">
+            <i class="bi bi-pencil"></i>
+          </button>
+        </div>
+      </td>
+    `;
+
+    tbody.appendChild(row);
+  });
 }
 
