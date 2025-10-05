@@ -308,22 +308,22 @@
 <!-- ✅ JS logic -->
 <script>
     // Show modal when clicking "+ New Task"
-    const triggerBtn = document.querySelector('.btn.btn-sm.btn-primary');
+    var triggerBtn = document.querySelector('.btn.btn-sm.btn-primary');
     if (triggerBtn) {
         triggerBtn.addEventListener('click', () => {
-            const modal = new bootstrap.Modal(document.getElementById('newTaskModal'));
+            var modal = new bootstrap.Modal(document.getElementById('newTaskModal'));
             modal.show();
         });
     }
 
     // Handle Save click
     document.getElementById('saveTaskBtn').addEventListener('click', () => {
-        const modalEl = document.getElementById('newTaskModal');
-        const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+        var modalEl = document.getElementById('newTaskModal');
+        var modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
         modal.hide();
 
         // Show alert
-        const alertPlaceholder = document.createElement('div');
+        var alertPlaceholder = document.createElement('div');
         alertPlaceholder.innerHTML = `
       <div class="alert alert-success alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3 shadow"
            role="alert" style="z-index: 2000; width: 300px;">
@@ -334,7 +334,7 @@
         document.body.appendChild(alertPlaceholder);
 
         setTimeout(() => {
-            const alert = bootstrap.Alert.getOrCreateInstance(alertPlaceholder.querySelector('.alert'));
+            var alert = bootstrap.Alert.getOrCreateInstance(alertPlaceholder.querySelector('.alert'));
             alert.close();
         }, 2000);
     });
