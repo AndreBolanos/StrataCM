@@ -194,3 +194,148 @@
     fetchClaimNumber();
     loadTableMainTaskList();
 </script>
+
+<!-- ✅ New Task Modal -->
+<div class="modal fade" id="newTaskModal" tabindex="-1" aria-labelledby="newTaskLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header text-white" style="background-color: #214563;">
+                <h5 class="modal-title" id="newTaskLabel">New Task</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <form id="newTaskForm">
+                    <div class="row g-3">
+
+                        <!-- Task Created Date -->
+                        <div class="col-md-6">
+                            <label class="form-label">Task Created Date</label>
+                            <input type="text" class="form-control" value="07/31/2025" disabled>
+                        </div>
+
+                        <div class="col-md-6"></div>
+
+                        <!-- Task Type -->
+                        <div class="col-md-6">
+                            <label class="form-label">Task Type</label>
+                            <select class="form-select mandatoryINP">
+                                <option selected disabled>Select task type</option>
+                                <option>Follow-up</option>
+                                <option>Appointment</option>
+                                <option>Call</option>
+                            </select>
+                        </div>
+
+                        <!-- Task Status -->
+                        <div class="col-md-6">
+                            <label class="form-label">Task Status</label>
+                            <select class="form-select mandatoryINP">
+                                <option selected disabled>Select status</option>
+                                <option>In Progress</option>
+                                <option>Completed</option>
+                                <option>Pending</option>
+                            </select>
+                        </div>
+
+                        <!-- Priority -->
+                        <div class="col-md-6">
+                            <label class="form-label">Priority</label>
+                            <select class="form-select mandatoryINP">
+                                <option selected disabled>Select priority</option>
+                                <option>Low</option>
+                                <option>Routine</option>
+                                <option>High</option>
+                            </select>
+                        </div>
+
+                        <!-- Task Due Date -->
+                        <div class="col-md-6">
+                            <label class="form-label">Task Due Date</label>
+                            <input type="datetime-local" class="form-control mandatoryINP">
+                        </div>
+
+                        <!-- Assigned To Nurse -->
+                        <div class="col-md-6">
+                            <label class="form-label">Assigned to Nurse</label>
+                            <select class="form-select mandatoryINP">
+                                <option selected>John Davies</option>
+                                <option>Laura Smith</option>
+                                <option>Emily Carter</option>
+                            </select>
+                        </div>
+
+                        <!-- Assigned to MSS Group -->
+                        <div class="col-md-6 d-flex" style="align-items: center;">
+                            <div class="form-check pt-2">
+                                <input class="form-check-input me-2" type="checkbox" id="assignedToMSS">
+                                <label class="form-check-label" for="assignedToMSS">Assigned To MSS Group</label>
+                            </div>
+                        </div>
+
+
+                        <!-- Comments -->
+                        <div class="col-12 mt-2">
+                            <label class="form-label">Comments</label>
+                            <textarea class="form-control" rows="4"></textarea>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer justify-content-center">
+                <button type="button" id="saveTaskBtn" class="btn btn-primary px-4">Save</button>
+                <button type="button" class="btn btn-outline-primary px-4" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ✅ Style for mandatory fields -->
+<style>
+    .mandatoryINP {
+        border-left: 4px solid #dc3545;
+        padding-left: 0.5rem;
+    }
+</style>
+
+<!-- ✅ JS logic -->
+<script>
+    // Show modal when clicking "+ New Task"
+    const triggerBtn = document.querySelector('.btn.btn-sm.btn-primary');
+    if (triggerBtn) {
+        triggerBtn.addEventListener('click', () => {
+            const modal = new bootstrap.Modal(document.getElementById('newTaskModal'));
+            modal.show();
+        });
+    }
+
+    // Handle Save click
+    document.getElementById('saveTaskBtn').addEventListener('click', () => {
+        const modalEl = document.getElementById('newTaskModal');
+        const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+        modal.hide();
+
+        // Show alert
+        const alertPlaceholder = document.createElement('div');
+        alertPlaceholder.innerHTML = `
+      <div class="alert alert-success alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3 shadow"
+           role="alert" style="z-index: 2000; width: 300px;">
+        Task created successfully.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    `;
+        document.body.appendChild(alertPlaceholder);
+
+        setTimeout(() => {
+            const alert = bootstrap.Alert.getOrCreateInstance(alertPlaceholder.querySelector('.alert'));
+            alert.close();
+        }, 2000);
+    });
+</script>

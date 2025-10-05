@@ -197,7 +197,11 @@
                         </div>
 
                         <div class="d-flex mt-3">
-                            <button type="button" class="btn btn-sm btn-primary">+ Create new Note</button>
+                            <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#newNoteModal">
+                                + Create new Note
+                            </button>
+
                             <button type="button" class="btn btn-sm btn-secondary ms-auto nav-trigger"
                                 data-page="pages/case/case-tasks.html" style="width: 100px;">
                                 <i class="bi bi-arrow-left me-1"></i>Exit Task
@@ -231,22 +235,87 @@
 
 <!-- ✅ Confirmation Modal -->
 <div class="modal fade" id="completeTaskModal" tabindex="-1" aria-labelledby="completeTaskLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="completeTaskLabel">Complete Task?</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Have all related notes been entered for this task?
-      </div>
-      <div class="modal-footer">
-        <button type="button" id="confirmCompleteBtn" class="btn btn-success">Yes, All Notes Entered</button>
-        <button type="button" id="createNoteBtn" class="btn btn-outline-primary" data-bs-dismiss="modal">No, Create Note</button>
-      </div>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="completeTaskLabel">Complete Task?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Have all related notes been entered for this task?
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="confirmCompleteBtn" class="btn btn-success">Yes, All Notes Entered</button>
+                <button type="button" id="createNoteBtn" class="btn btn-outline-primary" data-bs-dismiss="modal">No,
+                    Create Note</button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
+
+<!-- ✅ New Note Modal -->
+<div class="modal fade" id="newNoteModal" tabindex="-1" aria-labelledby="newNoteLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header text-white" style="background-color: #214563;">
+                <h5 class="modal-title" id="newNoteLabel">New Note</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <form id="newNoteForm">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Note Created By</label>
+                            <input type="text" class="form-control" value="Andrew Doe" disabled>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Note Created Date</label>
+                            <input type="text" class="form-control" value="09/02/2024 08:00 AM" disabled>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Note Type</label>
+                            <select class="form-select mandatoryINP">
+                                <option selected disabled>Select note type</option>
+                                <option>Call</option>
+                                <option>Appointment</option>
+                                <option>Follow-up</option>
+                                <option>Etc.</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Duration</label>
+                            <input type="text" class="form-control mandatoryINP" placeholder="Minutes">
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label">Comments</label>
+                            <textarea class="form-control mandatoryINP" rows="5"></textarea>
+                        </div>
+
+                        <div class="col-12 d-flex align-items-center">
+                            <input class="form-check-input me-2" type="checkbox" id="includeSignature" checked>
+                            <label class="form-check-label" for="includeSignature">Include Signature</label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Modal Footer -->
+            <!-- Modal Footer -->
+            <div class="modal-footer justify-content-center">
+                <button type="button" id="saveNoteBtn" class="btn btn-primary px-4">Save</button>
+                <button type="button" class="btn btn-outline-primary px-4" data-bs-dismiss="modal">Cancel</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 
 <script>
     fetchTaskNumber();
@@ -254,42 +323,70 @@
 </script>
 
 <script>
-  var taskStatus = document.getElementById('taskStatus');
-  var completeTaskModal = new bootstrap.Modal(document.getElementById('completeTaskModal'));
-  var confirmCompleteBtn = document.getElementById('confirmCompleteBtn');
-  var createNoteBtn = document.getElementById('createNoteBtn');
+    var taskStatus = document.getElementById('taskStatus');
+    var completeTaskModal = new bootstrap.Modal(document.getElementById('completeTaskModal'));
+    var confirmCompleteBtn = document.getElementById('confirmCompleteBtn');
+    var createNoteBtn = document.getElementById('createNoteBtn');
 
-  // When user selects "Completed"
-  taskStatus.addEventListener('change', () => {
-    if (taskStatus.value === 'Completed') {
-      completeTaskModal.show();
-    }
-  });
+    // Show confirmation modal when task marked "Completed"
+    taskStatus.addEventListener('change', () => {
+        if (taskStatus.value === 'Completed') {
+            completeTaskModal.show();
+        }
+    });
 
-  // If user confirms "All Notes Entered"
-  confirmCompleteBtn.addEventListener('click', () => {
-    completeTaskModal.hide();
+    // Confirm task completion
+    confirmCompleteBtn.addEventListener('click', () => {
+        completeTaskModal.hide();
 
-    // Disable all form fields (make read-only)
-    document.querySelectorAll('#taskForm input, #taskForm select, #taskForm textarea')
-      .forEach(el => el.setAttribute('disabled', true));
+        // Disable form fields
+        document.querySelectorAll('#taskForm input, #taskForm select, #taskForm textarea')
+            .forEach(el => el.setAttribute('disabled', true));
 
-    // Optionally set completed date automatically
-    var completedDateInput = document.querySelector('input[placeholder="MM/DD/YYYY"]');
-    if (completedDateInput) {
-      var now = new Date();
-      var formattedDate = now.toLocaleDateString('en-US') + ' ' +
-                            now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-      completedDateInput.value = formattedDate;
-    }
+        // Auto-fill completion date
+        var completedDateInput = document.querySelector('input[placeholder="MM/DD/YYYY"]');
+        if (completedDateInput) {
+            var now = new Date();
+            var formattedDate = now.toLocaleDateString('en-US') + ' ' +
+                now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            completedDateInput.value = formattedDate;
+        }
+    });
 
-    // Optionally trigger task finalization logic here...
-  });
+    // If user chooses to create note from Complete Task modal
+    createNoteBtn.addEventListener('click', () => {
+        var newNoteModal = new bootstrap.Modal(document.getElementById('newNoteModal'));
+        newNoteModal.show();
+    });
 
-  // If user clicks "Create Note"
-  createNoteBtn.addEventListener('click', () => {
-    // Show your "New Note" modal here
-    var newNoteModal = new bootstrap.Modal(document.getElementById('newNoteModal'));
-    newNoteModal.show();
-  });
+    // ✅ Handle Save Note button
+    document.getElementById('saveNoteBtn').addEventListener('click', () => {
+        // Always get the *current* instance
+        var newNoteModalEl = document.getElementById('newNoteModal');
+        var newNoteModal = bootstrap.Modal.getInstance(newNoteModalEl)
+            || new bootstrap.Modal(newNoteModalEl);
+
+        // Hide the modal safely
+        newNoteModal.hide();
+
+        // Also make sure any other open modal closes (edge case)
+        document.querySelectorAll('.modal.show').forEach(m => bootstrap.Modal.getInstance(m)?.hide());
+
+        // Show alert
+        var alertPlaceholder = document.createElement('div');
+        alertPlaceholder.innerHTML = `
+      <div class="alert alert-success alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3 shadow"
+           role="alert" style="z-index: 2000; width: 300px;">
+        Note created successfully.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    `;
+        document.body.appendChild(alertPlaceholder);
+
+        // Auto-dismiss
+        setTimeout(() => {
+            var alert = bootstrap.Alert.getOrCreateInstance(alertPlaceholder.querySelector('.alert'));
+            alert.close();
+        }, 2000);
+    });
 </script>
