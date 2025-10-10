@@ -213,8 +213,11 @@
                                 data-bs-target="#newNoteModal">
                                 + Create new Note
                             </button>
-
-                            <button type="button" class="btn btn-sm btn-secondary ms-auto nav-trigger"
+                            <button type="button"  class="btn btn-sm btn-success d-flex align-items-center justify-content-center ms-auto me-2"
+                                id="saveTask" style="width: 100px;">
+                                <i class="bi bi-floppy2-fill me-2"></i> Save Task
+                            </button>
+                            <button type="button" class="btn btn-sm btn-secondary nav-trigger"
                                 data-page="pages/case/case-tasks.html" style="width: 100px;">
                                 <i class="bi bi-arrow-left me-1"></i>Exit Task
                             </button>
@@ -398,6 +401,27 @@
         // Auto-dismiss
         setTimeout(() => {
             var alert = bootstrap.Alert.getOrCreateInstance(alertPlaceholder.querySelector('.alert'));
+            alert.close();
+        }, 2000);
+    });
+
+    document.getElementById('saveTask').addEventListener('click', () => {
+        // Create the alert element
+        const alertPlaceholder = document.createElement('div');
+        alertPlaceholder.innerHTML = `
+            <div class="alert alert-success alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3 shadow"
+                role="alert" style="z-index: 2000; width: 300px;">
+                Task saved successfully.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        `;
+
+        // Append alert to the body
+        document.body.appendChild(alertPlaceholder);
+
+        // Auto-dismiss after 2 seconds
+        setTimeout(() => {
+            const alert = bootstrap.Alert.getOrCreateInstance(alertPlaceholder.querySelector('.alert'));
             alert.close();
         }, 2000);
     });

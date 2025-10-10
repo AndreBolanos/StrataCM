@@ -27,8 +27,10 @@
     .nav-pills .nav-link:hover {
         background-color: #e2e6ea;
     }
-    .form-label{
+
+    .form-label {
         margin-bottom: 0px;
+        font-size: small;
     }
 </style>
 
@@ -341,7 +343,210 @@
 
             </div>
             <div class="tab-pane fade" id="claim" role="tabpanel" aria-labelledby="claim-tab">
-                <p>Claim tab content goes here.</p>
+
+                <div class="container-fluid mt-4">
+                    <!-- Claim Info Section -->
+                    <h5>Claim Info</h5>
+                    <hr>
+                    <div class="row g-3">
+                        <div class="col-md-2">
+                            <label class="form-label">Claim Number</label>
+                            <input type="text" class="form-control" value="20J341107266" readonly>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Injury Date</label>
+                            <input type="date" class="form-control" value="2020-11-14">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Jurisdiction</label>
+                            <input type="text" class="form-control" value="CA" readonly>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Claim Type</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Claim Type Last Update Date</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button class="btn btn-outline-primary w-100">View History</button>
+                        </div>
+
+                        <div class="col-md-2">
+                            <label class="form-label">Client Name</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Client Code/ID</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">EAMS #</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Compensability</label>
+                            <input type="text" class="form-control" value="YES">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Compensability Last Update Date</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button class="btn btn-outline-primary w-100">View History</button>
+                        </div>
+
+                        <div class="col-md-2">
+                            <label class="form-label">Jurisdictional Claim Number</label>
+                            <input type="text" class="form-control" value="18-432279">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">SW Office ID</label>
+                            <input type="text" class="form-control" value="1034">
+                        </div>
+                        <div class="col-md-2">
+                            
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Client Claim Status</label>
+                            <input type="text" class="form-control" value="O">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Client Claim Status Last Update Date</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button class="btn btn-outline-primary w-100">View History</button>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label">External Client ID</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Parent Account Name</label>
+                            <input type="text" class="form-control">
+                        </div>
+
+                        <div class="col-12 d-flex gap-3 mt-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="mco">
+                                <label class="form-check-label" for="mco">In MCO Network</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="medically">
+                                <label class="form-check-label" for="medically">Medically Managed</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="dispute">
+                                <label class="form-check-label" for="dispute">Dispute on File</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Claimant Section -->
+                    <h5 class="mt-5">Claimant</h5>
+                    <hr>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-2">
+                            <label class="form-label">First Name</label>
+                            <input type="text" class="form-control" value="JULIAN">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Middle Name</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Last Name</label>
+                            <input type="text" class="form-control" value="PALOMINO">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Birth Date</label>
+                            <input type="date" class="form-control" value="1988-09-07">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">SSN</label>
+                            <input type="text" class="form-control" value="***-**-9361" readonly>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Confirm SSN</label>
+                            <input type="password" class="form-control" value="********">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Hire Date</label>
+                            <input type="date" class="form-control">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Job Title</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Physical Demand Level</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Gender</label>
+                            <div class="d-flex gap-3 pt-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="gender" checked>
+                                    <label class="form-check-label">Male</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="gender">
+                                    <label class="form-check-label">Female</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="gender">
+                                    <label class="form-check-label">Unknown</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <label class="form-label">Language</label>
+                            <select class="form-select">
+                                <option selected disabled>Select Language</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Address 1</label>
+                            <input type="text" class="form-control" value="11201 5th St">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Address 2</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">City</label>
+                            <input type="text" class="form-control" value="Rancho Cucamonga">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">State</label>
+                            <select class="form-select">
+                                <option selected>CA</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-2">
+                            <label class="form-label">Zip</label>
+                            <input type="text" class="form-control" value="917305952">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Claimant Cell Phone</label>
+                            <input type="text" class="form-control" value="909-90927010">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Claimant Home Phone</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Claimant Email Address</label>
+                            <input type="email" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
             </div>
             <div class="tab-pane fade" id="injury" role="tabpanel" aria-labelledby="injury-tab">
                 <p>Injury tab content goes here.</p>
