@@ -32,6 +32,29 @@
         margin-bottom: 0px;
         font-size: small;
     }
+
+    /* Remove all borders except bottom for the accordion button */
+    .accordion-button {
+        background-color: transparent !important;
+        border: none !important;
+        border-bottom: 1px solid #dee2e6 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+
+    /* Remove background and shadow when open */
+    .accordion-button:not(.collapsed) {
+        background-color: transparent !important;
+        box-shadow: none !important;
+    }
+
+    /* Remove all borders from the accordion item except bottom on the button */
+    .accordion-item {
+        border: none !important;
+        border-bottom: none !important;
+    }
 </style>
 
 <div class="header-bar d-flex justify-content-between align-items-center px-3 py-2">
@@ -137,7 +160,7 @@
         <div class="tab-content" id="caseTabsContent">
             <div class="tab-pane fade show active" id="case" role="tabpanel" aria-labelledby="case-tab">
                 <div class="container-fluid mt-4">
-                    <h5><strong>Case Info</strong></h5>
+                    <h5>Case Info</h5>
                     <hr>
 
                     <form class="mb-3">
@@ -406,7 +429,7 @@
                             <input type="text" class="form-control" value="1034">
                         </div>
                         <div class="col-md-2">
-                            
+
                         </div>
                         <div class="col-md-2">
                             <label class="form-label">Client Claim Status</label>
@@ -549,7 +572,218 @@
 
             </div>
             <div class="tab-pane fade" id="injury" role="tabpanel" aria-labelledby="injury-tab">
-                <p>Injury tab content goes here.</p>
+                <div class="container-fluid mt-4">
+                    <div class="accordion" id="injuryReportAccordion">
+
+                        <!-- Injury Info -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="injuryInfoHeading">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#injuryInfo" aria-expanded="false" aria-controls="injuryInfo">
+                                    Injury Info
+                                </button>
+                            </h2>
+                            <div id="injuryInfo" class="accordion-collapse collapse"
+                                aria-labelledby="injuryInfoHeading">
+                                <div class="accordion-body">
+                                    <div class="row mb-3">
+                                        <div class="col-md-4">
+                                            <label for="injuryCause" class="form-label">Injury Cause</label>
+                                            <input type="text" class="form-control" id="injuryCause"
+                                                placeholder="Select or type injury cause">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="injuryNature" class="form-label">Injury Nature</label>
+                                            <input type="text" class="form-control" id="injuryNature" value="10">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="injurySource" class="form-label">Injury Source</label>
+                                            <input type="text" class="form-control" id="injurySource"
+                                                placeholder="Select or type injury source">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Injured Body Part(s) -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="injuredBodyPartHeading">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#injuredBodyPart" aria-expanded="false"
+                                    aria-controls="injuredBodyPart">
+                                    Injured Body Part(s)
+                                </button>
+                            </h2>
+                            <div id="injuredBodyPart" class="accordion-collapse collapse"
+                                aria-labelledby="injuredBodyPartHeading">
+                                <div class="accordion-body">
+                                    <div class="row mb-3">
+                                        <div class="col-md-4">
+                                            <label class="form-label">Body Part Imported</label>
+                                            <input type="text" class="form-control">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label">Location</label>
+                                            <select class="form-select">
+                                                <option selected disabled>Select location</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2 d-flex align-items-center">
+                                            <div class="form-check mt-4">
+                                                <input class="form-check-input" type="checkbox" checked>
+                                                <label class="form-check-label">Primary</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 d-flex align-items-end">
+                                            <button class="btn btn-primary w-100">+ Body Part</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Injury Extra Fields -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="injuryExtraFieldsHeading">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#injuryExtraFields" aria-expanded="false"
+                                    aria-controls="injuryExtraFields">
+                                    Injury Extra Fields
+                                </button>
+                            </h2>
+                            <div id="injuryExtraFields" class="accordion-collapse collapse"
+                                aria-labelledby="injuryExtraFieldsHeading">
+                                <div class="accordion-body">
+                                    <div class="row mb-3">
+                                        <div class="col-md-4">
+                                            <label class="form-label">Equipment</label>
+                                            <textarea class="form-control" rows="4"></textarea>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label">Accident Location</label>
+                                            <textarea class="form-control" rows="4"></textarea>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label">Accident Description</label>
+                                            <textarea class="form-control"
+                                                rows="4">BARRICADE LEG STRUCK MIKE IN FACE</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Confounding Factors -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="confoundingFactorsHeading">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#confoundingFactors" aria-expanded="false"
+                                    aria-controls="confoundingFactors">
+                                    Confounding Factors
+                                </button>
+                            </h2>
+                            <div id="confoundingFactors" class="accordion-collapse collapse"
+                                aria-labelledby="confoundingFactorsHeading">
+                                <div class="accordion-body">
+                                    <h6>Pre-Existing Conditions</h6>
+                                    <div class="row mb-3">
+                                        <div class="col-md-2">
+                                            <div class="form-check"><input class="form-check-input" type="checkbox">
+                                                <label class="form-check-label">Depression/PTSD/Psychosocial</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-check"><input class="form-check-input" type="checkbox">
+                                                <label class="form-check-label">Substance Abuse</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-check"><input class="form-check-input" type="checkbox">
+                                                <label class="form-check-label">HTN</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-check"><input class="form-check-input" type="checkbox">
+                                                <label class="form-check-label">Opioids</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-check"><input class="form-check-input" type="checkbox">
+                                                <label class="form-check-label">Surgery or Hospital Stay</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-check"><input class="form-check-input" type="checkbox">
+                                                <label class="form-check-label">Obesity</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-check"><input class="form-check-input" type="checkbox">
+                                                <label class="form-check-label">Diabetes</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-check"><input class="form-check-input" type="checkbox">
+                                                <label class="form-check-label">Legal Representation</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-check"><input class="form-check-input" type="checkbox">
+                                                <label class="form-check-label">Arthritis</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-check"><input class="form-check-input" type="checkbox">
+                                                <label class="form-check-label">Tobacco</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-check"><input class="form-check-input" type="checkbox">
+                                                <label class="form-check-label">Alcohol</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-check"><input class="form-check-input" type="checkbox">
+                                                <label class="form-check-label">Age</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-check"><input class="form-check-input" type="checkbox">
+                                                <label class="form-check-label">Other</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <h6>Previous Injuries</h6>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <div class="form-check"><input class="form-check-input" type="checkbox">
+                                                <label class="form-check-label">Auto</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-check"><input class="form-check-input" type="checkbox">
+                                                <label class="form-check-label">Sports</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-check"><input class="form-check-input" type="checkbox">
+                                                <label class="form-check-label">Personal</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-check"><input class="form-check-input" type="checkbox">
+                                                <label class="form-check-label">Previous WC</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
             </div>
             <div class="tab-pane fade" id="attorney" role="tabpanel" aria-labelledby="attorney-tab">
                 <p>Attorney tab content goes here.</p>
