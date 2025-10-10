@@ -27,24 +27,27 @@
     .nav-pills .nav-link:hover {
         background-color: #e2e6ea;
     }
+    .form-label{
+        margin-bottom: 0px;
+    }
 </style>
 
 <div class="header-bar d-flex justify-content-between align-items-center px-3 py-2">
-  <!-- Left: Claim Number -->
-  <div class="d-flex align-items-center">
-    <strong class="me-2">Claim Number:</strong>
-    <span id="claimNumber"></span>
-  </div>
+    <!-- Left: Claim Number -->
+    <div class="d-flex align-items-center">
+        <strong class="me-2">Claim Number:</strong>
+        <span id="claimNumber"></span>
+    </div>
 
-  <!-- Center: Claimant Info -->
-  <div class="d-flex gap-4 text-center align-items-center">
-    <div><strong>Claimant Name:</strong> MICHAEL GAST</div>
-    <div><strong>Dispute:</strong> No</div>
-    <div><strong>State:</strong> IL</div>
-  </div>
+    <!-- Center: Claimant Info -->
+    <div class="d-flex gap-4 text-center align-items-center">
+        <div><strong>Claimant Name:</strong> MICHAEL GAST</div>
+        <div><strong>Dispute:</strong> No</div>
+        <div><strong>State:</strong> IL</div>
+    </div>
 
-  <!-- Right: Buttons -->
-  <div class="d-flex gap-2 justify-content-center me-2">
+    <!-- Right: Buttons -->
+    <div class="d-flex gap-2 justify-content-center me-2">
         <button class="btn btn-sm btn-success d-flex align-items-center justify-content-center" id="saveBtn"
             style="width: 100px;">
             <i class="bi bi-floppy2-fill me-2"></i> Save
@@ -119,6 +122,14 @@
                 <button class="nav-link" id="employer-tab" data-bs-toggle="pill" data-bs-target="#employer"
                     type="button" role="tab">Employer</button>
             </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="workStatus-tab" data-bs-toggle="pill" data-bs-target="#workStatus"
+                    type="button" role="tab">Work Status</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="provider-tab" data-bs-toggle="pill" data-bs-target="#provider"
+                    type="button" role="tab">Provider</button>
+            </li>
         </ul>
 
         <div class="tab-content" id="caseTabsContent">
@@ -127,151 +138,203 @@
                     <h5><strong>Case Info</strong></h5>
                     <hr>
 
-                    <form>
-                        <div class="row g-3">
+                    <form class="mb-3">
+                        <div class="row">
+                            <!-- Column 1-->
+                            <div class="col-6">
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <label class="form-label">Jurisdiction</label>
+                                        <select class="form-select">
+                                            <option selected disabled>Select...</option>
+                                        </select>
+                                    </div>
 
-                            <!-- Row 1 -->
-                            <div class="col-sm-4">
-                                <label for="jurisdiction" class="form-label">Jurisdiction</label>
-                                <select id="jurisdiction" class="form-select form-select-sm">
-                                    <option selected>Choose...</option>
-                                </select>
+                                    <div class="col-6">
+                                        <label class="form-label">Case Received Date</label>
+                                        <input type="datetime-local" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <!-- Case Manager -->
+                                    <div class="col-6">
+                                        <label class="form-label">Case Manager</label>
+                                        <select class="form-select">
+                                            <option selected disabled>Select...</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Assisted By -->
+                                    <div class="col-6">
+                                        <label class="form-label">Assisted By</label>
+                                        <select class="form-select">
+                                            <option selected disabled>Select...</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <!-- Client Case Number -->
+                                    <div class="col-6">
+                                        <label class="form-label">Client Case Number</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+
+                                    <!-- Client Name -->
+                                    <div class="col-6">
+                                        <label class="form-label">Client Name</label>
+                                        <select class="form-select">
+                                            <option selected disabled>Select...</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <!-- Triage Start Date -->
+                                    <div class="col-4">
+                                        <label class="form-label">Triage Start Date</label>
+                                        <input type="datetime-local" class="form-control">
+                                    </div>
+
+                                    <!-- Triage End Date -->
+                                    <div class="col-4">
+                                        <label class="form-label">Triage End Date</label>
+                                        <input type="datetime-local" class="form-control">
+                                    </div>
+
+                                    <!-- Case Last Update -->
+                                    <div class="col-4">
+                                        <label class="form-label">Case Last Update</label>
+                                        <input type="datetime-local" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="d-inline-flex align-items-center gap-3">
+                                    <div class="mt-4">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="dispute">
+                                            <label class="form-check-label" for="dispute">Dispute on File</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="medically">
+                                            <label class="form-check-label" for="medically">Medically Managed</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="patientContact">
+                                            <label class="form-check-label" for="patientContact">Patient Contact
+                                                Issue</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="litigation">
+                                            <label class="form-check-label" for="litigation">Litigation</label>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
-                            <div class="col-sm-4">
-                                <label for="caseReceived" class="form-label">Case Received Date</label>
-                                <input type="date" id="caseReceived" class="form-control form-control-sm">
-                            </div>
+                            <!-- Column 2 -->
+                            <div class="col-6">
+                                <div class="row mb-3">
+                                    <div class="col-4">
+                                        <label class="form-label">Case Create Date</label>
+                                        <input type="datetime-local" class="form-control">
+                                    </div>
 
-                            <div class="col-sm-4">
-                                <label for="caseCreate" class="form-label">Case Create Date</label>
-                                <input type="date" id="caseCreate" class="form-control form-control-sm">
-                            </div>
+                                    <div class="col-4">
+                                        <label class="form-label">Case Open Date</label>
+                                        <input type="datetime-local" class="form-control">
+                                    </div>
 
-                            <!-- Row 2 -->
-                            <div class="col-sm-4">
-                                <label for="caseOpen" class="form-label">Case Open Date</label>
-                                <input type="date" id="caseOpen" class="form-control form-control-sm">
-                            </div>
+                                    <div class="col-4">
+                                        <label class="form-label">Case Close Date</label>
+                                        <input type="datetime-local" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <!-- NCM Supervisor -->
+                                    <div class="col-6">
+                                        <label class="form-label">NCM Supervisor</label>
+                                        <select class="form-select">
+                                            <option selected disabled>Select...</option>
+                                        </select>
+                                    </div>
 
-                            <div class="col-sm-4">
-                                <label for="caseClose" class="form-label">Case Close Date</label>
-                                <input type="date" id="caseClose" class="form-control form-control-sm">
-                            </div>
+                                    <!-- Case Closure Status -->
+                                    <div class="col-6">
+                                        <label class="form-label">Case Closure Status</label>
+                                        <select class="form-select">
+                                            <option selected disabled>Select...</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <!-- Case Status -->
+                                    <div class="col-4">
+                                        <label class="form-label">Case Status</label>
+                                        <select class="form-select">
+                                            <option>Open</option>
+                                            <option>Closed</option>
+                                            <option>Pending</option>
+                                        </select>
+                                    </div>
 
-                            <!-- Row 3 -->
-                            <div class="col-sm-4">
-                                <label for="caseManager" class="form-label">Case Manager</label>
-                                <select id="caseManager" class="form-select form-select-sm">
-                                    <option selected>Choose...</option>
-                                </select>
-                            </div>
+                                    <!-- Case Status Last Update -->
+                                    <div class="col-4">
+                                        <label class="form-label">Case Status Last Update</label>
+                                        <input type="datetime-local" class="form-control">
+                                    </div>
 
-                            <div class="col-sm-4">
-                                <label for="assistedBy" class="form-label">Assisted By</label>
-                                <select id="assistedBy" class="form-select form-select-sm">
-                                    <option selected>Choose...</option>
-                                </select>
-                            </div>
+                                    <!-- Case Status History Button -->
+                                    <div class="col-4 d-flex align-items-end">
+                                        <button type="button" class="btn btn-primary w-100">View Case Status
+                                            History</button>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <!-- Case Phase -->
+                                    <div class="col-4">
+                                        <label class="form-label">Case Phase</label>
+                                        <select class="form-select">
+                                            <option>Una</option>
+                                            <option>Phase 1</option>
+                                            <option>Phase 2</option>
+                                        </select>
+                                    </div>
 
-                            <div class="col-sm-4">
-                                <label for="ncmSupervisor" class="form-label">NCM Supervisor</label>
-                                <select id="ncmSupervisor" class="form-select form-select-sm">
-                                    <option selected>Choose...</option>
-                                </select>
-                            </div>
+                                    <!-- Case Phase Last Update -->
+                                    <div class="col-4">
+                                        <label class="form-label">Case Phase Last Update</label>
+                                        <input type="datetime-local" class="form-control">
+                                    </div>
 
-                            <!-- Row 4 -->
-                            <div class="col-sm-8">
-                                <label for="caseClosureStatus" class="form-label">Case Closure Status</label>
-                                <select id="caseClosureStatus" class="form-select form-select-sm">
-                                    <option selected>Choose...</option>
-                                </select>
-                            </div>
+                                    <!-- Case Phase History Button -->
+                                    <div class="col-4 d-flex align-items-end">
+                                        <button type="button" class="btn btn-primary w-100">View Case Phase
+                                            History</button>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <!-- Work Status -->
+                                    <div class="col-4">
+                                        <label class="form-label">Work Status</label>
+                                        <select class="form-select">
+                                            <option>Full Duty</option>
+                                            <option>Modified</option>
+                                            <option>Off Work</option>
+                                        </select>
+                                    </div>
 
-                            <!-- Row 5 -->
-                            <div class="col-sm-6">
-                                <label for="clientCaseNumber" class="form-label">Client Case Number</label>
-                                <input type="text" id="clientCaseNumber" class="form-control form-control-sm">
-                            </div>
+                                    <!-- Work Status Last Update -->
+                                    <div class="col-4">
+                                        <label class="form-label">Work Status Last Update</label>
+                                        <input type="datetime-local" class="form-control">
+                                    </div>
 
-                            <div class="col-sm-6">
-                                <label for="clientName" class="form-label">Client Name</label>
-                                <select id="clientName" class="form-select form-select-sm">
-                                    <option selected>Choose...</option>
-                                </select>
-                            </div>
-
-                            <!-- Row 6 -->
-                            <div class="col-sm-4">
-                                <label for="caseStatus" class="form-label">Case Status</label>
-                                <select id="caseStatus" class="form-select form-select-sm">
-                                    <option selected>Closed</option>
-                                </select>
-                            </div>
-
-                            <div class="col-sm-4">
-                                <label for="casePhase" class="form-label">Case Phase</label>
-                                <select id="casePhase" class="form-select form-select-sm">
-                                    <option selected>Una</option>
-                                </select>
-                            </div>
-
-                            <div class="col-sm-4">
-                                <label for="workStatus" class="form-label">Work Status</label>
-                                <select id="workStatus" class="form-select form-select-sm">
-                                    <option selected>Choose...</option>
-                                </select>
-                            </div>
-
-                            <!-- Row 7 -->
-                            <div class="col-sm-4">
-                                <label for="triageStart" class="form-label">Triage Start Date</label>
-                                <input type="date" id="triageStart" class="form-control form-control-sm">
-                            </div>
-
-                            <div class="col-sm-4">
-                                <label for="triageEnd" class="form-label">Triage End Date</label>
-                                <input type="date" id="triageEnd" class="form-control form-control-sm">
-                            </div>
-
-                            <div class="col-sm-4">
-                                <label for="caseLastUpdate" class="form-label">Case Last Update</label>
-                                <input type="date" id="caseLastUpdate" class="form-control form-control-sm">
+                                    <!-- Work Status History Button -->
+                                    <div class="col-4 d-flex align-items-end">
+                                        <button type="button" class="btn btn-primary w-100">View Work Status
+                                            History</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-
-                        <!-- Inline Checkboxes + History Buttons in One Row -->
-                        <div class="d-flex justify-content-between align-items-center mt-4 flex-wrap">
-
-                            <!-- Checkboxes -->
-                            <div class="d-flex flex-wrap align-items-center gap-3">
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="dispute">
-                                    <label class="form-check-label" for="dispute">Dispute on File</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="medically">
-                                    <label class="form-check-label" for="medically">Medically Managed</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="patientContact">
-                                    <label class="form-check-label" for="patientContact">Patient Contact Issue</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="litigation">
-                                    <label class="form-check-label" for="litigation">Litigation</label>
-                                </div>
-                            </div>
-
-                            <!-- History Buttons -->
-                            <div class="d-flex gap-2 mt-2 mt-sm-0">
-                                <button type="button" class="btn btn-primary btn-sm">View Case Status History</button>
-                                <button type="button" class="btn btn-primary btn-sm">View Case Phase History</button>
-                                <button type="button" class="btn btn-primary btn-sm">View Work Status History</button>
-                            </div>
-                        </div>
-
 
                     </form>
                 </div>
@@ -292,6 +355,12 @@
             <div class="tab-pane fade" id="employer" role="tabpanel" aria-labelledby="employer-tab">
                 <p>Employer tab content goes here.</p>
             </div>
+            <div class="tab-pane fade" id="workStatus" role="tabpanel" aria-labelledby="workStatus-tab">
+                <p>Work Status tab content goes here.</p>
+            </div>
+            <div class="tab-pane fade" id="provider" role="tabpanel" aria-labelledby="provider-tab">
+                <p>Provider tab content goes here.</p>
+            </div>
         </div>
 
     </div>
@@ -299,5 +368,5 @@
 
 
 <script>
-fetchClaimNumber();
+    fetchClaimNumber();
 </script>
