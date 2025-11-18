@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>@ Tag Autocomplete (Bootstrap + Preview)</title>
+
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+  body {
+    background: #f8f9fa;
+    padding: 40px;
+  }
+  textarea {
+    width: 100%;
+    min-height: 100px;
+  }
+  #dropdownBox {
+    position: absolute;
+    z-index: 10000;
+    display: none;
+    min-width: 180px;
+  }
+  #mirror {
+    position: absolute;
+    top: 0;
+    left: -9999px;
+    visibility: hidden;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h4 class="mb-4">@ Tag Autocomplete functionality</h4>
+
+  <div>
+    <textarea id="ta" class="form-control" placeholder="Type @username, @email, etc..."></textarea>
+    <div id="dropdownBox" class="dropdown-menu show shadow"></div>
+    <div id="mirror"></div>
+  </div>
+
+  <h5 class="mt-4">Preview Output:</h5>
+  <div id="preview" class="p-3 bg-white border rounded" style="min-height:80px;">
+    <em class='text-muted'>Nothing to preview</em>
+  </div>
+</div>
+
+<script>
+// Mock data to replace @tags
+const replacements = {
+  username: 'André Bolaños',
+  email: 'andre@example.com',
+  city: 'Guatemala City',
+  phone: '+502 5555-5555',
+  country: 'Guatemala',
+  company: 'TechCorp',
+  address: '4827 Maplewood Drive, Springfield, IL 62704, USA',
+  supervisor: 'Alfredo Cea',
+};
+
+const tags = Object.keys(replacements);
+
+const ta = document.getElementById('ta');
+const dropdown = document.getElementById('dropdownBox');
+const mirror = document.getElementById('mirror');
+const preview = document.getElementById('preview');
+
+let atIndex = -1;
+
+// Get caret coordinates relative to textarea
+function getCaretCoordinates(textarea, position) {
+  const style = window.getComputedStyle(textarea);
+  const properties = [
+    'fontFamily', 'fontSize', 'fontWeight', 'lineHeight',
+    'padding', 'border', 'whiteSpace', 'letterSpacing'
+  ];
+  properties.forEach(p => mirror.style[p] = style[p]);
+  mirror.style.width = style.width;
+  mirror.textContent = textarea.value.substring(0, position);
+  const span = document.createElement('span');
+  span.textContent = '\u200b'; // caret marker
+  mirror.appendChild(span);
+  const mirrorRect = mirror.getBoundingClientRect();
+  const spanRect = span.getBoundingClientRect();
+  const inputRect = textarea.getBoundingClientRect();
+  return {
+    top: inputRect.top + (spanRect.top - mirrorRect.top) - textarea.scrollTop + parseInt(style.lineHeight || 16),
+    left: inputRect.left + (spanRect.left - mirrorRect.left) - textarea.scrollLeft
+  };
+}
+
+// Show dropdown near @
+function showDropdownAt(coords, items) {
+  dropdown.innerHTML = '';
+  items.forEach(it => {
+    const a = document.createElement('a');
+    a.textContent = it;
+    a.href = '#';
+    a.className = 'dropdown-item';
+    a.onclick = e => {
+      e.preventDefault();
+      insertTag(it);
+    };
+    dropdown.appendChild(a);
+  });
+  dropdown.style.left = coords.left + 'px';
+  dropdown.style.top = coords.top + 'px';
+  dropdown.style.display = 'block';
+}
+
+function hideDropdown() {
+  dropdown.style.display = 'none';
+}
+
+function insertTag(tag) {
+  const val = ta.value;
+  const before = val.slice(0, atIndex);
+  const after = val.slice(ta.selectionStart);
+  ta.value = before + '@' + tag + ' ' + after;
+  hideDropdown();
+  updatePreview();
+  ta.focus();
+}
+
+// Detect typing and show suggestions
+ta.addEventListener('input', e => {
+  const pos = ta.selectionStart;
+  const text = ta.value.slice(0, pos);
+  atIndex = text.lastIndexOf('@');
+  
+  if (atIndex === -1) {
+    hideDropdown();
+  } else {
+    const query = text.slice(atIndex + 1);
+    const filtered = tags.filter(t => t.toLowerCase().startsWith(query.toLowerCase()));
+    if (filtered.length > 0) {
+      const coords = getCaretCoordinates(ta, pos);
+      showDropdownAt(coords, filtered);
+    } else {
+      hideDropdown();
+    }
+  }
+  updatePreview();
+});
+
+// Hide dropdown if clicking outside
+document.addEventListener('click', e => {
+  if (!dropdown.contains(e.target) && e.target !== ta) hideDropdown();
+});
+
+// Update preview dynamically
+function updatePreview() {
+  const raw = ta.value;
+
+  if (raw.trim() === "") {
+    preview.innerHTML = "<em class='text-muted'>Nothing to preview</em>";
+    return;
+  }
+
+  // Replace @tags with replacements
+  let rendered = raw.replace(/@(\w+)/g, (match, key) => {
+    return `<strong>${replacements[key] || match}</strong>`;
+  });
+
+  // Replace new lines with <br> for HTML
+  rendered = rendered.replace(/\n/g, '<br>');
+
+  preview.innerHTML = rendered;
+}
+
+</script>
+</body>
+</html>

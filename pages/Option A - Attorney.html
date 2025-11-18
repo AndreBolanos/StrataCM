@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Add/Replace Attorney</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light py-4">
+
+    <div class="container">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Add/Replace Attorney</h5>
+            </div>
+            <div class="card-body">
+
+                <!-- Accordion -->
+                <div class="accordion" id="attorneyAccordion">
+
+                    <!-- Search Section -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="searchHeading">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#searchCollapse" aria-expanded="true" aria-controls="searchCollapse">
+                                Search for Attorneys
+                            </button>
+                        </h2>
+                        <div id="searchCollapse" class="accordion-collapse collapse show"
+                            aria-labelledby="searchHeading" data-bs-parent="#attorneyAccordion">
+                            <div class="accordion-body">
+
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                                    <input type="text" id="searchInput" class="form-control"
+                                        placeholder="Search for Attorneys (e.g., name, firm, phone)">
+                                    <button class="btn btn-primary" id="btnSearch">Search</button>
+                                </div>
+
+                                <!-- Search Results Table -->
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover align-middle text-center"
+                                        id="resultsTable">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Firm</th>
+                                                <th>Phone</th>
+                                                <th>Email</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- JS fills this dynamically -->
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Toggle switch -->
+                                <div class="form-check form-switch mb-4">
+                                    <input class="form-check-input" type="checkbox" id="toggleManualAccordion">
+                                    <label class="form-check-label" for="toggleManualAccordion">Enter the Attorney’s
+                                        information manually</label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Manual Entry Section -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="manualHeading">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#manualCollapse" aria-expanded="false" aria-controls="manualCollapse">
+                                Enter Attorney's Information Manually
+                            </button>
+                        </h2>
+                        <div id="manualCollapse" class="accordion-collapse collapse" aria-labelledby="manualHeading"
+                            data-bs-parent="#attorneyAccordion">
+                            <div class="accordion-body">
+
+                                <form id="manualForm" class="row g-3">
+                                    <div class="col-md-4">
+                                        <label class="form-label">Attorney Type</label>
+                                        <select class="form-select">
+                                            <option>Select Type</option>
+                                            <option>Defense</option>
+                                            <option>Prosecutor</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label class="form-label">Name</label>
+                                        <input type="text" class="form-control" placeholder="Name">
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label class="form-label">Firm</label>
+                                        <input type="text" class="form-control" placeholder="Firm">
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label class="form-label">Address Type</label>
+                                        <select class="form-select">
+                                            <option>Business</option>
+                                            <option>Home</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label class="form-label">Address 1</label>
+                                        <input type="text" class="form-control" placeholder="Address 1">
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label class="form-label">Address 2</label>
+                                        <input type="text" class="form-control" placeholder="Address 2">
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label class="form-label">City</label>
+                                        <input type="text" class="form-control" placeholder="City">
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <label class="form-label">State</label>
+                                        <select class="form-select">
+                                            <option>NY</option>
+                                            <option>NJ</option>
+                                            <option>CA</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label class="form-label">Zip Code</label>
+                                        <input type="text" class="form-control" placeholder="Zip Code">
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label class="form-label">Phone</label>
+                                        <input type="text" class="form-control" placeholder="( ) - ">
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label class="form-label">Fax</label>
+                                        <input type="text" class="form-control" placeholder="( ) - ">
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label class="form-label">Email</label>
+                                        <input type="email" class="form-control" placeholder="Email">
+                                    </div>
+
+                                    <div class="col-12 text-end">
+                                        <button type="button" class="btn btn-success">Add/Replace</button>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div><!-- /accordion -->
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Dummy search results
+        const dummyResults = [
+            { name: 'Charles Darwin', firm: 'Charles Law', phone: '(819) 261-1111', email: 'charles@charleslaw.com' },
+            { name: 'Jane Smith', firm: 'Smith Legal', phone: '(212) 555-9876', email: 'jane@smithlegal.com' }
+        ];
+
+        // Populate table when "Search" clicked
+        document.getElementById('btnSearch').addEventListener('click', () => {
+            const tableBody = document.querySelector('#resultsTable tbody');
+            tableBody.innerHTML = '';
+            dummyResults.forEach(item => {
+                const row = `<tr>
+        <td>${item.name}</td>
+        <td>${item.firm}</td>
+        <td>${item.phone}</td>
+        <td>${item.email}</td>
+      </tr>`;
+                tableBody.innerHTML += row;
+            });
+        });
+
+        // Toggle manual accordion open/close
+        const toggle = document.getElementById('toggleManualAccordion');
+        const manualCollapseEl = document.getElementById('manualCollapse');
+        const manualCollapse = new bootstrap.Collapse(manualCollapseEl, { toggle: false });
+
+        toggle.addEventListener('change', function () {
+            if (this.checked) {
+                manualCollapse.show();
+            } else {
+                manualCollapse.hide();
+            }
+        });
+    </script>
+</body>
+
+</html>

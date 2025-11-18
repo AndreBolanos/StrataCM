@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Templates + TinyMCE + @Mentions + Word Export</title>
+
+    <!-- Bootstrap (for layout & button styles) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- TinyMCE -->
+    <script src="https://cdn.jsdelivr.net/npm/tinymce@6.8.3/tinymce.min.js"></script>
+
+    <!-- Word export libs -->
+    <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+
+    <style>
+        body {
+            background: #f8f9fa;
+            padding: 40px;
+        }
+
+        .editor-wrap {
+            position: relative;
+        }
+
+        /* Mention dropdown */
+        #mentionDropdown {
+            position: absolute;
+            z-index: 10000;
+            display: none;
+            min-width: 220px;
+            max-height: 260px;
+            overflow-y: auto;
+            background: #fff;
+            border: 1px solid rgba(0, 0, 0, .15);
+            border-radius: .375rem;
+            box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
+            font-size: 0.9rem;
+        }
+
+        #mentionDropdown .item {
+            padding: .4rem .75rem;
+            cursor: pointer;
+        }
+
+        #mentionDropdown .item:hover,
+        #mentionDropdown .item.active {
+            background: #f1f5f9;
+            /* slate-100 */
+        }
+
+        /* Variable token style S2-B (teal-600) */
+        .var-token {
+            color: #0d9488;
+            font-weight: 700;
+        }
+
+        /* S3: Outline tag style for variables INSIDE the editor */
+        .tox .variable {
+            border: 1px solid #0d9488;
+            /* teal-600 outline */
+            color: #0d9488;
+            padding: 1px 4px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        /* dropdown items */
+        #mentionDropdown .item {
+            padding: .4rem .75rem;
+            cursor: pointer;
+        }
+
+        #mentionDropdown .item.active,
+        #mentionDropdown .item:hover {
+            background: #f1f5f9;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h4 class="mb-4">Templates + TinyMCE + @Category.variable + Word Export</h4>
+
+        <div class="mb-2 d-flex gap-2">
+            <div style="flex:1">
+                <label class="form-label fw-bold">Templates</label>
+                <select id="templateSelector" class="form-select form-select-sm"></select>
+            </div>
+            <div class="d-flex align-items-end gap-2">
+                <button id="btnClear" class="btn btn-sm btn-secondary">Clear</button>
+                <button id="btnSaveTemplate" class="btn btn-sm btn-primary">Save as Template</button>
+                <button id="btnClearTemplates" class="btn btn-sm btn-danger">Delete Templates</button>
+                <button id="btnGenerateDoc" class="btn btn-sm btn-success">Download Word</button>
+            </div>
+        </div>
+
+        <div class="editor-wrap">
+            <textarea id="editor"></textarea>
+            <div id="mentionDropdown" role="listbox" aria-label="Mention suggestions"></div>
+        </div>
+
+        <h5 class="mt-4">Live Preview (replaced):</h5>
+        <div id="preview" class="p-3 bg-white border rounded" style="min-height:80px;">
+            <em class="text-muted">Nothing to preview</em>
+        </div>
+    </div>
+
+    <script>
+        // ---------- DATA ----------
+        const data = {
+            Supervisor: { name: "Alfredo Cea", email: "alfredo@example.com", phone: "+502-5555-0000" },
+            Employee: { name: "André Bolaños", email: "andre@example.com", phone: "+502-5555-1111" },
+            Provider: { companyName: "TechCorp", city: "Guatemala City", country: "Guatemala" }
+        };
+        const legacy = {
+            username: "André Bolaños", email: "andre@example.com", city: "Guatemala City",
+            phone: "+502 5555-5555", country: "Guatemala", company: "TechCorp",
+            address: "4827 Maplewood Drive, Springfield, IL 62704, USA", supervisor: "Alfredo Cea"
+        };
+        const templatesDefault = {
+            "Select Template": "",
+            "Letter to Employee": `Hello @Employee.name,\n\nWe have received your documentation. If we need any clarification, we will contact you at @Employee.email or @Employee.phone.\n\nRegards,\n@Supervisor.name`,
+            "Nurse Triage Report": `Nurse triage completed.\n\nSupervisor assigned: @Supervisor.name\nEmployee involved: @Employee.name\n\nCase is located in @Provider.city, @Provider.country.\n\nPlease review this report.`,
+            "Provider Contact": `Hello,\n\nI am contacting @Provider.companyName located in @Provider.city, @Provider.country.\n\nSupervisor email reference: @Supervisor.email\n\nThank you`
+        };
+
+        // ---------- TinyMCE ----------
+        let editor; // TinyMCE instance
+        tinymce.init({
+            selector: '#editor',
+            menubar: false,
+            branding: false,
+            height: 340,
+            plugins: 'lists',
+            toolbar: 'undo redo | bold italic underline strikethrough | h1 h2 h3 h4 | fontsizeselect | forecolor backcolor | align | bullist numlist',
+            block_formats: 'Paragraph=p; Heading 1=h1; Heading 2=h2; Heading 3=h3',
+            fontsize_formats: '10pt 11pt 12pt 14pt 18pt 24pt',
+            content_style: `
+        body { font-family: Calibri, Arial, sans-serif; font-size: 12pt; }
+        .var-token { color: #0d9488; font-weight: 700; }
+        p { margin: 0 0 10px; }
+      `,
+            setup: function (ed) {
+                editor = ed;
+                ed.on('init', () => { setEditorText(''); updatePreview(); buildTemplateSelector(); });
+                ed.on('input keyup NodeChange', throttle(handleEditorInput, 50));
+                ed.on('keydown', handleEditorKeydown);
+                ed.on('blur', () => hideDropdown());
+            }
+        });
+
+        // ======== DROPDOWN STATE ========
+        const dropdown = document.getElementById('mentionDropdown');
+        let ddItems = [];          // current items
+        let ddIndex = -1;          // highlighted index
+        let tokenRange = null;     // current '@...' range
+        let phase = null;          // 'category' | 'variable'
+        let currentCategory = null;// fixed cat when in variable phase
+
+        // Keep a stable list identity so arrows don't reset index
+        let lastKey = ''; // string key of current suggestion set
+
+        function listKey(phase, items, prefix = '') {
+            return phase + '|' + prefix + '|' + items.join('\u0001');
+        }
+
+        function renderDropdownItems(items) {
+            dropdown.innerHTML = '';
+            items.forEach((text, i) => {
+                const div = document.createElement('div');
+                div.className = 'item' + (i === ddIndex ? ' active' : '');
+                div.textContent = text;
+                div.setAttribute('role', 'option');
+                // prevent editor blur so click works
+                div.addEventListener('mousedown', e => { e.preventDefault(); e.stopPropagation(); });
+                div.addEventListener('click', e => {
+                    e.preventDefault(); e.stopPropagation();
+                    if (phase === 'category') insertCategory(text);
+                    else if (phase === 'variable') insertVariable(currentCategory, text);
+                });
+                dropdown.appendChild(div);
+            });
+        }
+
+        function showDropdownAt(x, y, items, identityKey) {
+            const sameList = (identityKey === lastKey);
+            ddItems = items.slice();
+
+            // keep current highlight if same list, else reset to first item
+            if (!sameList) ddIndex = Math.min(ddIndex < 0 ? 0 : ddIndex, ddItems.length - 1);
+            if (ddIndex < 0) ddIndex = 0;
+
+            renderDropdownItems(ddItems);
+
+            dropdown.style.left = x + 'px';
+            dropdown.style.top = y + 'px';
+            dropdown.style.display = 'block';
+
+            lastKey = identityKey;
+            editor.focus();
+        }
+
+        function hideDropdown() {
+            dropdown.style.display = 'none';
+            ddItems = []; ddIndex = -1; tokenRange = null; phase = null; currentCategory = null;
+            lastKey = '';
+        }
+
+        function moveHighlight(delta) {
+            if (!ddItems.length) return;
+            ddIndex = (ddIndex + delta + ddItems.length) % ddItems.length;
+            // update active class only (no re-render)
+            [...dropdown.children].forEach((el, idx) => {
+                el.classList.toggle('active', idx === ddIndex);
+                if (idx === ddIndex) el.scrollIntoView({ block: 'nearest' });
+            });
+        }
+
+
+        function handleEditorKeydown(e) {
+            if (dropdown.style.display !== 'block') return; // no dropdown: let TinyMCE handle keys
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                moveHighlight(1);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                moveHighlight(-1);
+            } else if (e.key === 'Enter') {
+                // Option C: select only when dropdown visible
+                e.preventDefault();
+                const picked = ddItems[ddIndex];
+                if (picked != null) {
+                    if (phase === 'category') insertCategory(picked);
+                    else if (phase === 'variable') insertVariable(currentCategory, picked);
+                }
+            } else if (e.key === 'Tab') {
+                // TAB: do nothing special (no selection); allow default TinyMCE behavior
+                // do not e.preventDefault()
+            } else if (e.key === 'Escape') {
+                e.preventDefault();
+                hideDropdown();
+            }
+        }
+
+
+        // position dropdown near caret (convert iframe rect to page coords, then to editor-wrap coords)
+        function getCaretClientRect() {
+            const rng = editor.selection.getRng();
+            const rects = rng.getClientRects();
+            if (rects && rects.length) return rects[0];
+
+            // fallback mark
+            const d = editor.getDoc();
+            const span = d.createElement('span');
+            span.appendChild(d.createTextNode('\u200b'));
+            rng.insertNode(span);
+            const rect = span.getBoundingClientRect();
+            span.parentNode.removeChild(span);
+            return rect;
+        }
+
+        const editorWrap = document.querySelector('.editor-wrap');
+
+        function handleEditorInput() {
+            updatePreview();
+
+            const tok = getAtTokenRange();   // same function you already have
+            if (!tok) { hideDropdown(); return; }
+
+            tokenRange = tok.range;
+            const core = tok.text.slice(1);
+            const dot = core.indexOf('.');
+
+            // position anchor
+            const caretRect = getCaretClientRect(); // same helper you already have
+            const iframeRect = editor.iframeElement.getBoundingClientRect();
+            const wrapRect = editorWrap.getBoundingClientRect();
+
+            const x = iframeRect.left + caretRect.left - wrapRect.left;
+            const y = iframeRect.top + caretRect.bottom - wrapRect.top;
+
+            if (dot === -1) {
+                // CATEGORY PHASE
+                phase = 'category';
+                const cats = Object.keys(data).filter(c => c.toLowerCase().startsWith(core.toLowerCase()));
+                const key = listKey('category', cats, core.toLowerCase());
+                showDropdownAt(x, y, cats, key);
+            } else {
+                // VARIABLE PHASE
+                const rawCat = core.slice(0, dot);
+                const catName = findRealCategoryName(rawCat) || rawCat;
+                const q = core.slice(dot + 1).toLowerCase();
+
+                if (!data[catName]) {
+                    phase = 'category';
+                    const cats = Object.keys(data).filter(c => c.toLowerCase().startsWith(rawCat.toLowerCase()));
+                    const key = listKey('category', cats, rawCat.toLowerCase());
+                    showDropdownAt(x, y, cats, key);
+                    return;
+                }
+
+                phase = 'variable';
+                currentCategory = catName;
+                const keys = Object.keys(data[catName]).filter(k => k.toLowerCase().startsWith(q));
+                const idKey = listKey('variable|' + catName, keys, q);
+                showDropdownAt(x, y, keys, idKey);
+            }
+        }
+
+
+        function getAtTokenRange() {
+            const sel = editor.selection;
+            const d = editor.getDoc();
+            const rng = sel.getRng().cloneRange();
+
+            // Ensure text container
+            let node = rng.startContainer;
+            let off = rng.startOffset;
+            if (node.nodeType !== 3 && node.childNodes.length && off > 0) {
+                node = node.childNodes[off - 1];
+                while (node && node.nodeType !== 3 && node.lastChild) node = node.lastChild;
+                off = (node && node.nodeType === 3) ? node.textContent.length : 0;
+            }
+            if (!node || node.nodeType !== 3) return null;
+
+            // collect backward text within current block
+            let acc = node.textContent.slice(0, off);
+            let cur = node;
+            // climb left within same block
+            while (cur && cur.parentNode && !isBlock(cur.parentNode)) {
+                const prev = prevTextNode(cur);
+                if (!prev) break;
+                cur = prev;
+                acc = prev.textContent + acc;
+            }
+
+            const atPos = acc.lastIndexOf('@');
+            if (atPos === -1) return null;
+            const tail = acc.slice(atPos);
+            if (/\s/.test(tail)) return null;
+
+            // Build start position from atPos
+            const { node: startNode, offset: startOffset } = findPositionFromOffsetBackwards(cur, node, acc.length - tail.length);
+            if (!startNode) return null;
+
+            const atRng = d.createRange();
+            atRng.setStart(startNode, startOffset);
+            const caret = sel.getRng();
+            atRng.setEnd(caret.startContainer, caret.startOffset);
+
+            return { range: atRng, text: atRng.toString() };
+        }
+
+        function prevTextNode(n) {
+            let p = n;
+            while (p && !p.previousSibling) {
+                p = p.parentNode;
+                if (isBlock(p)) return null;
+            }
+            if (!p) return null;
+            p = p.previousSibling;
+            while (p && p.lastChild) p = p.lastChild;
+            return (p && p.nodeType === 3) ? p : null;
+        }
+
+        function findPositionFromOffsetBackwards(firstTextNodeInRun, caretNode, absoluteOffsetFromStart) {
+            // Walk forward from the first text node until caretNode, subtracting lengths to find the start offset
+            let n = firstTextNodeInRun;
+            let remaining = absoluteOffsetFromStart;
+            while (n) {
+                if (n.nodeType === 3) {
+                    if (remaining <= n.textContent.length) {
+                        return { node: n, offset: remaining };
+                    } else {
+                        remaining -= n.textContent.length;
+                    }
+                }
+                if (n === caretNode) break;
+                // next text node forward within same block
+                n = nextTextNode(n);
+            }
+            return null;
+        }
+
+        function nextTextNode(n) {
+            // depth-first forward
+            if (n.nextSibling) {
+                let p = n.nextSibling;
+                while (p && p.firstChild) p = p.firstChild;
+                return (p && p.nodeType === 3) ? p : nextTextNode(p || n.nextSibling);
+            }
+            // climb up until a nextSibling appears, but stop at block
+            let p = n.parentNode;
+            while (p && !p.nextSibling) {
+                if (isBlock(p)) return null;
+                p = p.parentNode;
+            }
+            if (!p || isBlock(p)) return null;
+            p = p.nextSibling;
+            while (p && p.firstChild) p = p.firstChild;
+            return (p && p.nodeType === 3) ? p : null;
+        }
+
+        function isBlock(el) {
+            if (!el || el.nodeType !== 1) return false;
+            const name = el.nodeName.toLowerCase();
+            return ['p', 'div', 'li', 'ul', 'ol', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'table', 'thead', 'tbody', 'tr', 'td', 'th'].includes(name);
+        }
+
+        function findRealCategoryName(userTyped) {
+            const lower = userTyped.toLowerCase();
+            for (const real of Object.keys(data)) if (real.toLowerCase() === lower) return real;
+            return null;
+        }
+
+        function insertCategory(catInput) {
+            const cat = findRealCategoryName(catInput) || catInput;
+            if (!tokenRange) return;
+            // Insert styled token for clarity in the editor
+            const html = `<span class="variable">@${escapeHtml(cat)}.</span>`;
+            editor.selection.setRng(tokenRange);
+            editor.selection.setContent(html, { format: 'html' });
+            editor.focus();
+            hideDropdown();
+            // immediately re-run detection (caret is after the dot) to show variable dropdown
+            setTimeout(handleEditorInput, 0);
+        }
+
+        function insertVariable(catName, key) {
+            if (!tokenRange) return;
+            const html = `<span class="variable">@${escapeHtml(catName)}.${escapeHtml(key)} </span>`;
+            editor.selection.setRng(tokenRange);
+            editor.selection.setContent(html, { format: 'html' });
+            editor.focus();
+            hideDropdown();
+            updatePreview();
+        }
+
+
+        function escapeHtml(s) { return s.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m])); }
+        function throttle(fn, wait) { let t = 0; return (...a) => { const n = Date.now(); if (n - t > wait) { t = n; fn.apply(this, a); } }; }
+
+        // ---------- Preview (replaced) ----------
+        function replaceVariablesInHTML(html) {
+            const tmp = document.createElement('div'); tmp.innerHTML = html;
+            // Replace only text nodes, keep formatting
+            const walker = document.createTreeWalker(tmp, NodeFilter.SHOW_TEXT, null);
+            const catRegex = /@([A-Za-z][A-Za-z0-9]*)\.([A-Za-z][A-Za-z0-9_]*)/g;
+            const legacyRegex = /@([A-Za-z][A-Za-z0-9_]*)/g;
+
+            const replaceText = (text) => {
+                return text
+                    .replace(catRegex, (m, cat, key) => {
+                        const real = findRealCategoryName(cat) || cat;
+                        const val = (data?.[real]?.[key]);
+                        return val != null ? val : m;
+                    })
+                    .replace(legacyRegex, (m, key) => {
+                        const val = (legacy?.[key]);
+                        return val != null ? val : m;
+                    });
+            };
+
+            let node;
+            while ((node = walker.nextNode())) node.nodeValue = replaceText(node.nodeValue);
+            return tmp.innerHTML;
+        }
+
+        function updatePreview() {
+            if (!editor) return;
+            const html = editor.getContent({ format: 'html' });
+            const replacedHTML = replaceVariablesInHTML(html);
+            const preview = document.getElementById('preview');
+            preview.innerHTML = replacedHTML.trim() ? replacedHTML : "<em class='text-muted'>Nothing to preview</em>";
+        }
+
+        // ---------- Templates ----------
+        const templateSelector = document.getElementById('templateSelector');
+
+        function nl2p(text) {
+            return (text || '').split(/\n/).map(t => `<p>${escapeHtml(t).replace(/\s{2}/g, '&nbsp;&nbsp;')}</p>`).join('');
+        }
+        function setEditorText(text) { editor.setContent(nl2p(text)); }
+        function getEditorHTML() { return editor.getContent({ format: 'html' }); }
+
+        function loadLocalTemplates() { return JSON.parse(localStorage.getItem('customTemplatesHTML') || '{}'); }
+        function saveLocalTemplates(obj) { localStorage.setItem('customTemplatesHTML', JSON.stringify(obj)); }
+
+        function buildTemplateSelector() {
+            templateSelector.innerHTML = '';
+            const full = { ...templatesDefault, ...loadLocalTemplates() };
+            Object.keys(full).forEach(name => {
+                const opt = document.createElement('option');
+                opt.value = name; opt.textContent = name;
+                templateSelector.appendChild(opt);
+            });
+            templateSelector.value = "Select Template";
+        }
+
+        templateSelector.addEventListener('change', () => {
+            const name = templateSelector.value;
+            const full = { ...templatesDefault, ...loadLocalTemplates() };
+            const tpl = full[name] || '';
+            if (name in templatesDefault) setEditorText(tpl); else editor.setContent(tpl);
+            editor.focus(); updatePreview();
+        });
+
+        document.getElementById('btnClear').addEventListener('click', () => {
+            templateSelector.value = "Select Template";
+            editor.setContent(''); updatePreview(); editor.focus();
+        });
+
+        document.getElementById('btnSaveTemplate').addEventListener('click', () => {
+            const name = prompt("Template name:"); if (!name) return;
+            const html = getEditorHTML();
+            if (!html || !html.replace(/<[^>]*>/g, '').trim()) { alert("Cannot save empty template."); return; }
+            const stored = loadLocalTemplates(); stored[name] = html; saveLocalTemplates(stored);
+            buildTemplateSelector(); templateSelector.value = name; alert("Template saved!");
+        });
+
+        document.getElementById('btnClearTemplates').addEventListener('click', () => {
+            if (!confirm("Delete ALL custom templates?")) return;
+            localStorage.removeItem('customTemplatesHTML');
+            buildTemplateSelector(); alert("All saved templates deleted.");
+        });
+
+        // ---------- Export to Word (rule-based formatting: H1/H2/H3/B/I/U, bullets, align, 6pt spacing) ----------
+        document.getElementById('btnGenerateDoc').addEventListener('click', async () => {
+            if (!window.docx) { alert('docx library not loaded'); return; }
+            const { Document, Packer, Paragraph, TextRun, AlignmentType } = window.docx;
+
+            // Use replaced HTML (so @variables are already swapped out)
+            const replacedHTML = replaceVariablesInHTML(getEditorHTML());
+
+            // Build paragraphs with rule-based mapping
+            const paragraphs = htmlToDocxParagraphsRB(replacedHTML, { Paragraph, TextRun, AlignmentType });
+
+            const doc = new Document({
+                styles: {
+                    default: {
+                        document: {
+                            run: { font: "Calibri", size: 24 },                 // 12pt font
+                            paragraph: { spacing: { after: 120 } }              // S2: 6pt after (6*20 twips)
+                        }
+                    }
+                },
+                sections: [{ children: paragraphs }]
+            });
+
+            const filename = prompt("File name:", "template.docx") || "template.docx";
+            const blob = await Packer.toBlob(doc);
+            saveAs(blob, filename);
+        });
+
+
+        function htmlToDocxParagraphsRB(html, { Paragraph, TextRun, AlignmentType }) {
+            const tmp = document.createElement('div');
+            tmp.innerHTML = html;
+
+            // Normalize <br> inside blocks into explicit break runs
+            const blocks = tmp.querySelectorAll('h1,h2,h3,p,div,li');
+            const nodes = blocks.length ? Array.from(blocks) : [tmp];
+
+            const paras = [];
+
+            nodes.forEach(block => {
+                // Determine block-level style
+                const tag = (block.tagName || '').toLowerCase();
+
+                // Font size mapping (half-points): 22pt=44, 18pt=36, 14pt=28, 12pt=24
+                let baseSize = 24; // default 12pt
+                let baseBold = false;
+
+                if (tag === 'h1') { baseSize = 44; baseBold = true; }
+                else if (tag === 'h2') { baseSize = 36; baseBold = true; }
+                else if (tag === 'h3') { baseSize = 28; baseBold = true; }
+                
+
+                // Alignment mapping (read inline style if present)
+                let align = undefined;
+                const styleAttr = (block.getAttribute && block.getAttribute('style')) || '';
+                const ta = /text-align\s*:\s*(left|center|right)/i.exec(styleAttr);
+                if (ta) {
+                    const v = ta[1].toLowerCase();
+                    align = v === 'center' ? AlignmentType.CENTER :
+                        v === 'right' ? AlignmentType.RIGHT :
+                            AlignmentType.LEFT;
+                }
+
+                // UL/OL bullets → simple bullet prefix + indent
+                const isListItem = tag === 'li';
+                const isOrdered = block.closest('ol') != null;
+                const bulletPrefix = isListItem ? (isOrdered ? '' : '• ') : '';
+                const indent = isListItem ? { left: 720 } : undefined; // ~0.5"
+
+                // Walk inline children → build runs (bold/italic/underline)
+                const runs = [];
+                function walk(node, ctx) {
+                    if (node.nodeType === 3) { // text
+                        const text = node.nodeValue || '';
+                        if (!text.length) return;
+
+                        // Split by newline but use soft breaks (TextRun with break)
+                        const parts = text.split('\n');
+                        parts.forEach((t, i) => {
+                            if (t.length) {
+                                runs.push(new TextRun({
+                                    text: t,
+                                    bold: !!ctx.bold,
+                                    italics: !!ctx.italics,
+                                    underline: ctx.underline ? {} : undefined,
+                                    size: ctx.size
+                                }));
+                            }
+                            if (i < parts.length - 1) {
+                                runs.push(new TextRun({ break: 1 })); // soft line break
+                            }
+                        });
+                        return;
+                    }
+                    if (node.nodeType === 1) {
+                        const t = node.tagName.toLowerCase();
+                        const nextCtx = {
+                            bold: ctx.bold || t === 'b' || t === 'strong',
+                            italics: ctx.italics || t === 'i' || t === 'em',
+                            underline: ctx.underline || t === 'u',
+                            size: ctx.size
+                        };
+
+                        // Respect headings inside block (rare, but keep consistent)
+                        if (t === 'h1') { nextCtx.size = 44; nextCtx.bold = true; }
+                        else if (t === 'h2') { nextCtx.size = 36; nextCtx.bold = true; }
+                        else if (t === 'h3') { nextCtx.size = 28; nextCtx.bold = true; }
+
+                        if (t === 'br') {
+                            runs.push(new TextRun({ break: 1 }));
+                            return;
+                        }
+
+                        // Ignore span styles for Path B (keep it simple)
+                        for (const child of node.childNodes) walk(child, nextCtx);
+                    }
+                }
+
+                // If list item, start with bullet prefix (unordered only)
+                if (bulletPrefix) {
+                    runs.push(new TextRun({ text: bulletPrefix, size: baseSize, bold: baseBold }));
+                }
+
+                const initCtx = { bold: baseBold, italics: false, underline: false, size: baseSize };
+                for (const child of block.childNodes) walk(child, initCtx);
+
+                // Always create a paragraph (empty if needed)
+                paras.push(new Paragraph({
+                    alignment: align,
+                    indent,
+                    children: runs.length ? runs : [new TextRun({ text: '' })],
+                    spacing: { after: 120 } // reinforce S2 per paragraph
+                }));
+            });
+
+            return paras;
+        }
+
+    </script>
+</body>
+
+</html>

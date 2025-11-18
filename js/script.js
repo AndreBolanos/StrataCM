@@ -1,18 +1,114 @@
+// Global delegated navigation handler
+$(document).on('click', '.nav-link[data-page], .nav-trigger', function (e) {
+  e.preventDefault();
+
+  if (!requireLogin()) return;
+
+  const page = $(this).data('page');
+  if (!page) return;
+
+  // visual highlight
+  $('.nav-link').removeClass('active');
+  $(this).addClass('active');
+
+  loadPage(page);
+});
+
+
+// ----- Auth Functions -----
+
+function isLoggedIn() {
+  return localStorage.getItem("loggedIn") === "true";
+}
+
+function requireLogin() {
+  if (!isLoggedIn()) {
+
+    // Hide both sidebars when user is NOT logged in
+    $('#mainSidebar, #caseSidebar').css({
+      opacity: 0,
+      transform: 'translateX(-100%)',
+      pointerEvents: 'none'
+    });
+
+    loadPage('pages/login.html');
+    return false;
+  }
+  return true;
+}
+
+
+function logout() {
+  localStorage.removeItem("loggedIn");
+
+  // Hide both sidebars immediately on logout
+  $('#mainSidebar, #caseSidebar').css({
+    opacity: 0,
+    transform: 'translateX(-100%)',
+    pointerEvents: 'none'
+  });
+
+  loadPage('pages/login.html');
+}
+
+
+
 // ----- Global Functions -----
 
 function loadPage(page) {
   console.log('Loading page:', page);
 
   $('#main-content').load(page, function () {
-    if (page === 'pages/dashboard.html') {
-      initDashboard();
+
+    // If login page is loaded, activate login button
+    if (page === 'pages/login.html') {
+      // enable center layout
+      $('#main-content').addClass('login-active');
+      $('#loginBtn').click(function () {
+        const user = $('#loginUser').val().trim();
+        const pass = $('#loginPass').val().trim();
+
+        // Very simple example (you can replace with AJAX later)
+        if (user === "admin" && pass === "123") {
+          localStorage.setItem("loggedIn", "true");
+
+          // Show sidebar IMMEDIATELY after logging in
+          $('#mainSidebar').css({
+            opacity: '1',
+            transform: 'translateX(0)',
+            pointerEvents: 'auto'
+          });
+
+          loadPage('pages/dashboard.html');
+        }
+        else {
+          $('#loginError').removeClass('d-none');
+
+          // CLEAR BOTH FIELDS
+          $('#loginUser').val('');
+          $('#loginPass').val('');
+
+          // PUT CURSOR BACK ON USERNAME FIELD
+          $('#loginUser').focus();
+        }
+
+      });
     }
+    if (page !== 'pages/login.html') {
+      $('#main-content').removeClass('login-active');
+    }
+    if (page === 'pages/dashboard.html') {
+      setTimeout(() => initDashboard(), 10);
+    }
+
 
     if (page === 'pages/case/case-tasks.html') {
       initTaskDetail();
     }
 
     const cleanPage = page.split('?')[0];
+
+    if (!isLoggedIn()) return;
 
     if (cleanPage.startsWith('pages/case/')) {
       showCaseSidebar();
@@ -25,14 +121,38 @@ function loadPage(page) {
 }
 
 function showCaseSidebar() {
-  $('#mainSidebar').addClass('sidebar-hidden');
-  $('#caseSidebar').removeClass('sidebar-hidden');
+  // Hide main sidebar
+  $('#mainSidebar').css({
+    opacity: 0,
+    transform: 'translateX(-100%)',
+    pointerEvents: 'none'
+  });
+
+  // Show case sidebar
+  $('#caseSidebar').css({
+    opacity: 1,
+    transform: 'translateX(0)',
+    pointerEvents: 'auto'
+  });
 }
 
+
 function showMainSidebar() {
-  $('#mainSidebar').removeClass('sidebar-hidden');
-  $('#caseSidebar').addClass('sidebar-hidden');
+  // Hide case sidebar
+  $('#caseSidebar').css({
+    opacity: 0,
+    transform: 'translateX(-100%)',
+    pointerEvents: 'none'
+  });
+
+  // Show main sidebar
+  $('#mainSidebar').css({
+    opacity: 1,
+    transform: 'translateX(0)',
+    pointerEvents: 'auto'
+  });
 }
+
 
 function highlightCaseSidebarLink(cleanPage) {
   $('#caseSidebar .nav-link').removeClass('active');
@@ -123,24 +243,27 @@ function showSaveAlert(callback) {
   }, 1000);
 }
 
-
 // ----- DOM Ready -----
 
 $(document).ready(function () {
-  // Load default dashboard
-  loadPage('pages/dashboard.html');
 
-  // Sidebar nav link click (main + case)
-  $(document).on('click', '.nav-link, .nav-trigger', function (e) {
-    e.preventDefault();
-    $('.nav-link').removeClass('active');
-    $(this).addClass('active');
+  $('#saveAndExitBtn').click(function () {
+    console.log('Saving case...');
+    $('#exitModal').modal('hide');
 
-    const page = $(this).data('page');
-    if (page) {
-      loadPage(page);
-    }
+    showSaveAlert(() => {
+      exitToDashboard();
+    });
   });
+
+  $('#exitOnlyBtn').click(function () {
+    $('#exitModal').modal('hide');
+    exitToDashboard();
+  });
+  // Check login first
+  if (!requireLogin()) return;
+
+  loadPage('pages/dashboard.html');
 
   // Exit modal buttons
   $('#saveAndExitBtn').click(function () {

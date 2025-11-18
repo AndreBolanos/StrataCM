@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>StrataCM – Multi Tabs + Dynamic First Tab</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --scm-sidebar: #214563;
+            --scm-sidebar-hover: #244761;
+            --scm-border: #e8eef5;
+            --tab-active: #6c757d;
+            /* requested dark gray */
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            overflow: hidden;
+            background: #f6f8fb;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100%;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 200px;
+            background: var(--scm-sidebar);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand {
+            font-weight: 700;
+            letter-spacing: .3px;
+            padding: 14px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, .08);
+            font-size: 1.1rem;
+        }
+
+        .nav-caption {
+            font-size: .72rem;
+            /* text-transform: uppercase; */
+            opacity: .75;
+            padding: 10px 16px 6px;
+        }
+
+        .snav a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 14px;
+            /* margin: 2px 8px;
+            border-radius: 8px; */
+            color: #e6eef6;
+            text-decoration: none;
+            white-space: nowrap;
+            font-size: .88rem;
+            /* smaller so Advanced Case Search fits */
+        }
+
+        .snav a .bi {
+            font-size: 1.05rem;
+            width: 20px;
+            text-align: center;
+            color: inherit;
+        }
+
+        .snav a:hover {
+            background: var(--scm-sidebar-hover);
+            color: #fff;
+        }
+
+        .snav a.active {
+            background: #fff;
+            color: #000;
+        }
+
+        /* active: white bg + black text/icon */
+
+        .sidebar-footer {
+            margin-top: auto;
+            padding: 10px 12px;
+            border-top: 1px solid rgba(255, 255, 255, .08);
+            color: #e6eef6;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: .9rem;
+        }
+
+        .sidebar-footer .avatar {
+            width: 28px;
+            height: 28px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .15);
+        }
+
+        /* Main */
+        .main {
+            flex: 1;
+            overflow: auto;
+        }
+
+        .topbar {
+            background: #fff;
+            border-bottom: 1px solid var(--scm-border);
+            padding: 10px 16px;
+        }
+
+        .workspace {
+            padding: 14px 16px;
+        }
+
+        .tab-wrap {
+            background: #fff;
+            border: 1px solid var(--scm-border);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .nav-tabs {
+            border-bottom: 1px solid var(--scm-border);
+            gap: 6px;
+            padding: 8px 8px 0 8px;
+            overflow: auto;
+            white-space: nowrap;
+            flex-wrap: nowrap;
+        }
+
+        .nav-tabs .nav-link {
+            border: 1px solid var(--scm-border) !important;
+            border-bottom: 0 !important;
+            border-top-left-radius: .75rem !important;
+            border-top-right-radius: .75rem !important;
+            background: #f0f2f5;
+            color: #333;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-tabs .nav-link.active {
+            background: var(--tab-active);
+            color: #fff;
+            border-color: var(--tab-active) !important;
+        }
+
+        .tab-close {
+            border: none;
+            background: transparent;
+            margin-left: 2px;
+            line-height: 1;
+            opacity: .7;
+        }
+
+        .tab-close:hover {
+            opacity: 1;
+        }
+
+        #caseTabs {
+            overflow-y: hidden !important;
+            overflow-x: auto !important;
+            scrollbar-width: none;
+            /* hides scrollbar in Firefox */
+        }
+
+        #caseTabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* hides scrollbar in Chrome/Edge */
+
+
+        /* Cards / Tables */
+        .filter-card {
+            background: #fff;
+            border: 1px solid var(--scm-border);
+            border-radius: 10px;
+            padding: 16px;
+        }
+
+        .table-card {
+            background: #fff;
+            border: 1px solid var(--scm-border);
+            border-radius: 10px;
+        }
+
+        .table-card .table {
+            margin: 0;
+        }
+
+        /* Case pills */
+        .case-pills .nav-link {
+            color: #0d6efd;
+        }
+
+        .case-pills .nav-link.active {
+            color: #fff;
+            background: #0d6efd;
+        }
+
+        #topbarTitle span {
+            white-space: nowrap;
+        }
+
+        /* default close icon */
+        .tab-close {
+            color: #333;
+        }
+
+        /* when the tab is active, make the close icon white */
+        .nav-link.active .tab-close {
+            color: #fff;
+        }
+
+        .nav-link.active .tab-close:hover {
+            color: #ffffff;
+            opacity: 1;
+        }
+
+
+        @media (max-width: 991px) {
+            body {
+                overflow: auto;
+            }
+
+            .sidebar {
+                position: sticky;
+                top: 0;
+                height: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layout">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="brand">StrataCM</div>
+            <div class="nav-caption">Navigation</div>
+            <nav class="snav" id="sidebarNav">
+                <a href="#" id="navDashboard"><i class="bi bi-house-fill"></i> <span>Task Dashboard</span></a>
+                <a href="#" id="navAdvanced"><i class="bi bi-search"></i> <span>Advanced Case Search</span></a>
+                <a href="#" id="navCases"><i class="bi bi-briefcase-fill"></i> <span>Cases</span></a>
+                <a href="#" id="navManage"><i class="bi bi-gear-fill"></i> <span>Manage</span></a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="avatar"><i class="bi bi-person-fill"></i></div>
+                <div class="small">Andre</div>
+            </div>
+        </aside>
+
+        <!-- MAIN -->
+        <main class="main d-flex flex-column">
+            <div class="topbar d-flex align-items-center">
+                <div id="topbarTitle" class="fw-semibold flex-grow-1">Advanced Case Search</div>
+                <button id="btnExport" class="btn btn-outline-success btn-sm">
+                    <i class="bi bi-file-earmark-excel-fill"></i> Export to Excel
+                </button>
+            </div>
+
+
+            <div class="workspace">
+                <div class="tab-wrap">
+                    <!-- Tabs -->
+                    <ul class="nav nav-tabs" id="caseTabs" role="tablist">
+                        <!-- First tab is PERMANENT + DYNAMIC -->
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="tab-main-tab" data-bs-toggle="tab"
+                                data-bs-target="#tab-main" type="button" role="tab" aria-controls="tab-main"
+                                aria-selected="true">
+                                Advanced Case Search
+                            </button>
+                        </li>
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content p-3" id="caseTabContent">
+                        <!-- MAIN DYNAMIC PANE -->
+                        <div class="tab-pane fade show active" id="tab-main" role="tabpanel"
+                            aria-labelledby="tab-main-tab"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Helpers
+        function toId(s) { return 'case_' + String(s).trim().replace(/[^a-zA-Z0-9_-]+/g, '_'); }
+        function setActiveSidebar(el) {
+            document.querySelectorAll('#sidebarNav a').forEach(a => a.classList.remove('active'));
+            if (el) el.classList.add('active');
+        }
+        function setTopbarTitle(text) { document.getElementById('topbarTitle').textContent = text; }
+        function setMainTabLabel(text) { document.getElementById('tab-main-tab').textContent = text; }
+
+        // DOM refs
+        const tabsUl = document.getElementById('caseTabs');
+        const tabsContent = document.getElementById('caseTabContent');
+        const mainTabBtn = document.getElementById('tab-main-tab');
+        const mainTabPane = document.getElementById('tab-main');
+
+        /* ========== Dynamic First Tab (renders left menu content) ========== */
+        function renderDashboard() {
+            setMainTabLabel('Task Dashboard'); setTopbarTitle('Task Dashboard');
+            mainTabPane.innerHTML = `
+      <div class="p-2">
+        <div class="row g-3">
+          <div class="col-md-4">
+            <div class="card"><div class="card-body">
+              <div class="fw-semibold mb-1">Open Tasks</div>
+              <div class="display-6">12</div>
+              <div class="text-muted small">Due this week</div>
+            </div></div>
+          </div>
+          <div class="col-md-8">
+            <div class="card"><div class="card-body">
+              <div class="fw-semibold mb-1">Notes</div>
+              <p class="text-muted mb-0">Placeholder dashboard. Replace with widgets/charts.</p>
+            </div></div>
+          </div>
+        </div>
+      </div>`;
+            new bootstrap.Tab(mainTabBtn).show();
+        }
+
+        function renderAdvanced() {
+            setMainTabLabel('Advanced Case Search'); setTopbarTitle('Advanced Case Search');
+            mainTabPane.innerHTML = advancedSearchContent();
+            wireAdvancedSearch();
+            new bootstrap.Tab(mainTabBtn).show();
+        }
+
+        function renderCasesLanding() {
+            setMainTabLabel('Cases'); setTopbarTitle('Cases');
+            mainTabPane.innerHTML = `
+      <div class="p-2">
+        <div class="card"><div class="card-body">
+          <div class="fw-semibold mb-2">Open a Case</div>
+          <div class="row g-2 align-items-end">
+            <div class="col-sm-6 col-md-4">
+              <label class="form-label">Case #</label>
+              <input id="caseInput" class="form-control" placeholder="Enter case number">
+            </div>
+            <div class="col-auto">
+              <button id="btnOpenCase" class="btn btn-primary">Open Case</button>
+            </div>
+          </div>
+          <hr>
+          <div class="text-muted small">Tip: you can also open a case by clicking a Claim # in Advanced Case Search.</div>
+        </div></div>
+      </div>`;
+            document.getElementById('btnOpenCase').addEventListener('click', () => {
+                const num = document.getElementById('caseInput').value.trim();
+                if (num) openCaseTab(num);
+            });
+            new bootstrap.Tab(mainTabBtn).show();
+        }
+
+        function renderManage() {
+            setMainTabLabel('Manage'); setTopbarTitle('Manage');
+            mainTabPane.innerHTML = `
+      <div class="p-2">
+        <h5 class="mb-2">Manage</h5>
+        <p class="text-muted">Settings / Admin placeholders. Add your configuration panels here.</p>
+      </div>`;
+            new bootstrap.Tab(mainTabBtn).show();
+        }
+
+        // static meta map for demo
+        const caseMetaMap = {
+            "1204J4106322": { claimantName: "JUANA ALVAREZ", dispute: "No", state: "CA" },
+            "258365412512": { claimantName: "Corazon Marfil", dispute: "No", state: "CA" },
+            "885296325641": { claimantName: "BHAGYASHRIM McKee F", dispute: "Unknown", state: "IL" }
+        };
+
+
+        /* ========== Case Tabs (stay open next to first tab) ========== */
+        function openCaseTab(caseNumber) {
+            const id = toId(caseNumber);
+
+            const data = caseMetaMap[caseNumber] || { claimantName: "Unknown", dispute: "Unknown", state: "--" };
+
+            const meta = {
+                claimNumber: caseNumber,
+                claimantName: data.claimantName,
+                dispute: data.dispute,
+                state: data.state
+            };
+
+            openOrActivateTab({
+                id,
+                title: `Case ${caseNumber}`,
+                closeable: true,
+                content: casePaneContent(caseNumber),
+                meta
+            });
+
+            updateTopbarForActiveTab();
+        }
+
+
+        function casePaneContent(caseNumber) {
+            return `
+      <div class="p-2">
+        <!-- Pills -->
+        <ul class="nav nav-pills case-pills mb-3" id="casePills-${caseNumber}" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#pane-case-${caseNumber}" type="button" role="tab">Case</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#pane-claim-${caseNumber}" type="button" role="tab">Claim</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#pane-injury-${caseNumber}" type="button" role="tab">Injury</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#pane-attorney-${caseNumber}" type="button" role="tab">Attorney</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#pane-adjuster-${caseNumber}" type="button" role="tab">Adjuster</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#pane-employer-${caseNumber}" type="button" role="tab">Employer</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#pane-workstatus-${caseNumber}" type="button" role="tab">Work Status</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#pane-provider-${caseNumber}" type="button" role="tab">Provider</button>
+          </li>
+        </ul>
+
+        <!-- Pills panes -->
+        <div class="tab-content">
+          <div class="tab-pane fade show active" id="pane-case-${caseNumber}" role="tabpanel">
+            <div class="row g-3">
+              <div class="col-md-4">
+                <div class="card"><div class="card-body">
+                  <div class="fw-semibold mb-1">Claimant</div>
+                  <div class="text-muted">John / Jane Doe</div>
+                </div></div>
+              </div>
+              <div class="col-md-8">
+                <div class="card"><div class="card-body">
+                  <div class="fw-semibold mb-2">Summary</div>
+                  <ul class="mb-0 text-muted small">
+                    <li>Status: Open</li>
+                    <li>Phase: TASK</li>
+                    <li>State: CA</li>
+                    <li>Last updated: today</li>
+                  </ul>
+                </div></div>
+              </div>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="pane-claim-${caseNumber}" role="tabpanel">
+            <div class="card"><div class="card-body">
+              <div class="fw-semibold mb-2">Claim Info</div>
+              <p class="text-muted mb-0">Demo content for Claim.</p>
+            </div></div>
+          </div>
+          <div class="tab-pane fade" id="pane-injury-${caseNumber}" role="tabpanel">
+            <div class="card"><div class="card-body">
+              <div class="fw-semibold mb-2">Injury Details</div>
+              <p class="text-muted mb-0">Demo content for Injury.</p>
+            </div></div>
+          </div>
+          <div class="tab-pane fade" id="pane-attorney-${caseNumber}" role="tabpanel">
+            <div class="card"><div class="card-body">
+              <div class="fw-semibold mb-2">Attorney</div>
+              <p class="text-muted mb-0">Demo content for Attorney.</p>
+            </div></div>
+          </div>
+          <div class="tab-pane fade" id="pane-adjuster-${caseNumber}" role="tabpanel">
+            <div class="card"><div class="card-body">
+              <div class="fw-semibold mb-2">Adjuster</div>
+              <p class="text-muted mb-0">Demo content for Adjuster.</p>
+            </div></div>
+          </div>
+          <div class="tab-pane fade" id="pane-employer-${caseNumber}" role="tabpanel">
+            <div class="card"><div class="card-body">
+              <div class="fw-semibold mb-2">Employer</div>
+              <p class="text-muted mb-0">Demo content for Employer.</p>
+            </div></div>
+          </div>
+          <div class="tab-pane fade" id="pane-workstatus-${caseNumber}" role="tabpanel">
+            <div class="card"><div class="card-body">
+              <div class="fw-semibold mb-2">Work Status</div>
+              <p class="text-muted mb-0">Demo content for Work Status.</p>
+            </div></div>
+          </div>
+          <div class="tab-pane fade" id="pane-provider-${caseNumber}" role="tabpanel">
+            <div class="card"><div class="card-body">
+              <div class="fw-semibold mb-2">Provider</div>
+              <p class="text-muted mb-0">Demo content for Provider.</p>
+            </div></div>
+          </div>
+        </div>
+      </div>`;
+        }
+
+        // Create/activate a tab (keeps first tab permanent)
+        function openOrActivateTab(options) {
+
+            const { id, title, content, closeable = false } = options;
+            const tabBtnId = `${id}-tab`;
+            let existingBtn = document.getElementById(tabBtnId);
+
+            if (!existingBtn) {
+                // Button
+                const li = document.createElement('li');
+                li.className = 'nav-item';
+                li.role = 'presentation';
+
+                const btn = document.createElement('button');
+                btn.className = 'nav-link';
+                btn.id = tabBtnId;
+                btn.type = 'button';
+                btn.role = 'tab';
+                btn.setAttribute('data-bs-toggle', 'tab');
+                btn.setAttribute('data-bs-target', `#${id}`);
+                btn.textContent = title;
+
+                if (closeable) {
+                    const close = document.createElement('button');
+                    close.className = 'tab-close';
+                    close.innerHTML = '&times;';
+                    close.title = 'Close tab';
+                    close.addEventListener('click', (ev) => {
+                        ev.stopPropagation();
+                        closeTab(id);
+                    });
+                    btn.appendChild(close);
+                }
+
+                li.appendChild(btn);
+                tabsUl.appendChild(li);
+
+                // Pane
+                const pane = document.createElement('div');
+                pane.className = 'tab-pane fade p-2';
+                pane.id = id;
+                pane.role = 'tabpanel';
+                pane.innerHTML = content || '<div class="text-muted">No content</div>';
+
+                if (options.meta) {
+                    pane.dataset.meta = JSON.stringify(options.meta);
+                }
+
+                tabsContent.appendChild(pane);
+            }
+
+            new bootstrap.Tab(document.getElementById(tabBtnId)).show();
+            updateTopbarForActiveTab();
+        }
+
+
+        function closeTab(id) {
+            const btn = document.getElementById(`${id}-tab`);
+            const pane = document.getElementById(id);
+            const wasActive = btn.classList.contains('active');
+
+            btn.parentElement.remove();
+            pane.remove();
+
+            // If it was active, switch to the main (first) tab
+            if (wasActive) {
+                new bootstrap.Tab(mainTabBtn).show();
+                // Update topbar to reflect first tab's name
+                setTopbarTitle(mainTabBtn.textContent.trim());
+            }
+        }
+
+        /* ===== Advanced Search markup + handlers ===== */
+        function advancedSearchContent() {
+            return `
+      <div class="filter-card mb-3">
+        <form id="advancedSearchForm">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label">Claim Number</label>
+              <input type="text" class="form-control" placeholder="Enter claim #">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Claimant First Name</label>
+              <input type="text" class="form-control" placeholder="First name">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Claimant Last Name</label>
+              <input type="text" class="form-control" placeholder="Last name">
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">State</label>
+              <select class="form-select">
+                <option selected disabled>Select State</option>
+                <option>CA</option><option>AZ</option><option>TX</option><option>IL</option><option>NY</option>
+              </select>
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">Case Status</label>
+              <select class="form-select" multiple>
+                <option>Open</option>
+                <option>Closed</option>
+                <option>Reopened</option>
+                <option>OnHold</option>
+                <option>PendingAssignment</option>
+              </select>
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">Case Phase</label>
+              <select class="form-select">
+                <option selected disabled>Select Case Phase</option>
+                <option>INTAKE</option>
+                <option>TASK</option>
+                <option>NCM</option>
+                <option>PCM</option>
+                <option>UNA</option>
+              </select>
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">Work Status</label>
+              <select class="form-select">
+                <option selected disabled>Select Work Status</option>
+                <option>Full-Time Work</option>
+                <option>Part-Time Work</option>
+                <option>Released</option>
+                <option>Out of Work</option>
+                <option>Unknown</option>
+              </select>
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">Client</label>
+              <select class="form-select">
+                <option selected disabled>Select Client</option>
+                <option>CORE SPECIALTY</option>
+                <option>PGRMA</option>
+                <option>IMLRMA</option>
+                <option>BOLD AND QUAIL</option>
+              </select>
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">Nurse</label>
+              <select class="form-select">
+                <option selected disabled>Select Nurse</option>
+                <option>ClaimImports</option>
+                <option>Manuel Oliva Ruano</option>
+                <option>Anil Kumar</option>
+                <option>Shabeena Raj</option>
+                <option>Chhaya Pandey</option>
+              </select>
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">Injury Date From</label>
+              <input type="date" class="form-control">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Injury Date To</label>
+              <input type="date" class="form-control">
+            </div>
+          </div>
+
+          <div class="d-flex gap-2 mt-3">
+            <button type="button" class="btn btn-primary" id="btnSearchAdvanced">Search</button>
+            <button type="reset" class="btn btn-outline-secondary">Reset</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="table-card">
+        <div class="table-responsive">
+          <table class="table table-sm align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>Claim #</th>
+                <th>Claimant</th>
+                <th>Client</th>
+                <th>Body Part</th>
+                <th>State</th>
+                <th>Injury Date</th>
+                <th>Nurse</th>
+                <th>Case Phase</th>
+                <th>Case Status</th>
+                <th>Work Status</th>
+              </tr>
+            </thead>
+            <tbody id="demoResults">
+              <tr>
+                <td><a href="#" class="link-primary open-from-row" data-claim="1204J4106322">1204J4106322</a></td>
+                <td>JUANA ALVAREZ</td>
+                <td>CORE SPECIALTY</td>
+                <td>00 - Unknown Body Part</td>
+                <td>CA</td>
+                <td>11/16/2020</td>
+                <td>ClaimImports</td>
+                <td>PCM</td>
+                <td>PendingAssignment</td>
+                <td>Terminated</td>
+              </tr>
+              <tr>
+                <td><a href="#" class="link-primary open-from-row" data-claim="258365412512">258365412512</a></td>
+                <td>Corazon Marfil</td>
+                <td>BOLD AND QUAIL</td>
+                <td>Head - Multiple Head Injury</td>
+                <td>CA</td>
+                <td>03/22/2025</td>
+                <td>—</td>
+                <td>TASK</td>
+                <td>Reopened</td>
+                <td>Out of Work</td>
+              </tr>
+              <tr>
+                <td><a href="#" class="link-primary open-from-row" data-claim="885296325641">885296325641</a></td>
+                <td>BHAGYASHRIM McKee F</td>
+                <td>IMLRMA</td>
+                <td>Multiple Body Parts - Multi</td>
+                <td>IL</td>
+                <td>09/30/2007</td>
+                <td>ClaimImports</td>
+                <td>UNA</td>
+                <td>Closed</td>
+                <td>Unknown</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>`;
+        }
+
+        function wireAdvancedSearch() {
+            const results = document.getElementById('demoResults');
+            if (results) {
+                results.addEventListener('click', (e) => {
+                    const a = e.target.closest('.open-from-row');
+                    if (!a) return;
+                    e.preventDefault();
+                    openCaseTab(a.dataset.claim);
+                });
+            }
+            const btnSearch = document.getElementById('btnSearchAdvanced');
+            if (btnSearch) {
+                btnSearch.addEventListener('click', () => alert('Search executed (prototype)'));
+            }
+        }
+
+        /* ===== Left menu actions ===== */
+        document.getElementById('navDashboard').addEventListener('click', (e) => {
+            e.preventDefault(); setActiveSidebar(e.currentTarget); renderDashboard();
+        });
+        document.getElementById('navAdvanced').addEventListener('click', (e) => {
+            e.preventDefault(); setActiveSidebar(e.currentTarget); renderAdvanced();
+        });
+        document.getElementById('navCases').addEventListener('click', (e) => {
+            e.preventDefault(); setActiveSidebar(e.currentTarget); renderCasesLanding();
+        });
+        document.getElementById('navManage').addEventListener('click', (e) => {
+            e.preventDefault(); setActiveSidebar(e.currentTarget); renderManage();
+        });
+
+        // Export prototype
+        document.getElementById('btnExport').addEventListener('click', () => {
+            alert('Export generated (prototype)');
+        });
+
+        // Init
+        setActiveSidebar(document.getElementById('navAdvanced'));
+        renderAdvanced();
+
+        function updateTopbarForActiveTab() {
+            const activeBtn =
+                document.querySelector('#caseTabs .nav-link.active') ||
+                document.querySelector('#caseTabs .nav-link[aria-selected="true"]');
+
+            if (!activeBtn) return;
+
+            // first tab main
+            if (activeBtn.id === 'tab-main-tab') {
+                // left align
+                document.getElementById('topbarTitle').classList.remove('text-center');
+                document.getElementById('topbarTitle').classList.remove('d-flex');
+                document.getElementById('topbarTitle').classList.remove('justify-content-center');
+                setTopbarTitle(activeBtn.textContent.trim());
+                return;
+            }
+
+            // CASE TAB
+            const target = activeBtn.getAttribute('data-bs-target');
+            const tabPane = document.querySelector(target);
+            const meta = tabPane && tabPane.dataset.meta ? JSON.parse(tabPane.dataset.meta) : null;
+            if (!meta) return;
+
+            // layout:
+            // left side → claim number
+            // center part → rest of fields
+
+            const html = `
+        <div class="d-flex w-100">
+            <div style="flex: 0 0 auto;">
+                <strong>Claim Number:</strong> ${meta.claimNumber}
+            </div>
+            <div style="flex:1; display:flex; justify-content:center; gap:30px;">
+                <span><strong>Claimant Name:</strong> ${meta.claimantName}</span>
+                <span><strong>Dispute:</strong> ${meta.dispute}</span>
+                <span><strong>State:</strong> ${meta.state}</span>
+            </div>
+        </div>
+    `;
+
+            const titleEl = document.getElementById('topbarTitle');
+            titleEl.innerHTML = html;
+
+            // important: remove any text-center class here in case it was added for first tab
+            titleEl.classList.remove('text-center');
+        }
+
+
+        document.addEventListener('shown.bs.tab', (ev) => {
+            if (ev.target && ev.target.classList.contains('nav-link') && ev.target.closest('#caseTabs')) {
+                updateTopbarForActiveTab();
+            }
+        });
+
+
+    </script>
+</body>
+
+</html>

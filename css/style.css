@@ -192,31 +192,116 @@ div.dataTables_wrapper div.dataTables_paginate {
 /* Shared sidebar transition */
 .side-nav,
 .case-sidebar {
-  transition: transform 0.6s ease, opacity 0.6s ease;
+    transition: transform 0.6s ease, opacity 0.6s ease;
 }
 
 /* Base state: sidebars are visible */
 .side-nav,
 .case-sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 200px;
-  height: 100vh;
-  background-color: #214563;
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  z-index: 1030;
-  opacity: 1;
-  transform: translateX(0);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 200px;
+    height: 100vh;
+    background-color: #214563;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    z-index: 1030;
+    opacity: 1;
+    transform: translateX(0);
 }
 
 /* Hidden state: move left and fade */
 .sidebar-hidden {
-  opacity: 0;
-  transform: translateX(-100%);
-  pointer-events: none; /* prevent interaction */
+    opacity: 0;
+    transform: translateX(-100%);
+    pointer-events: none;
+    /* prevent interaction */
 }
 
 
+/* Hide both sidebars by default (no flicker on login screen) */
+#mainSidebar,
+#caseSidebar {
+    opacity: 0;
+    transform: translateX(-100%);
+    pointer-events: none;
+}
+
+/* Center login screen when login page is active */
+.main-content.login-active {
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    /* full viewport */
+}
+
+.nav-link.logout-link {
+    margin-top: auto !important;
+}
+
+.nav-menu-up {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    /* allows it to take all vertical available space */
+}
+
+/* LOGIN LAYOUT */
+.login-wrapper {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+}
+
+/* LEFT SIDE (white) */
+.login-left {
+
+    background: #ffffff;
+
+}
+
+.login-form-container {
+    max-width: 380px;
+    margin: 0 auto;
+}
+
+/* RIGHT SIDE (blue gradient) */
+.login-right {
+    width: 50%;
+    background: linear-gradient(180deg, #0466c8, #023e7d);
+    padding: 40px;
+    color: white;
+}
+
+/* Promo Box */
+.promo-box {
+    width: 300px;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 25px;
+    border-radius: 12px;
+    backdrop-filter: blur(6px);
+}
+
+.login-box {
+    width: 100%;
+    max-width: 460px;
+    /* Increase width here */
+    padding: 20px 20px;
+
+}
+
+.login-box .form-control {
+    height: 46px;
+    /* Optional: taller */
+    font-size: 15px;
+}
+
+.login-box button {
+    height: 46px;
+    font-size: 16px;
+}
