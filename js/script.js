@@ -58,7 +58,7 @@ function logout() {
 function loadPage(page) {
   console.log('Loading page:', page);
 
-  $('#main-content').load(page, function () {
+  $('#main-content').load(page + '?_=' + new Date().getTime(), function () {
 
     // If login page is loaded, activate login button
     if (page === 'pages/login.html') {
