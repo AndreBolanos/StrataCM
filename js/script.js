@@ -62,17 +62,17 @@ function loadPage(page) {
 
     // If login page is loaded, activate login button
     if (page === 'pages/login.html') {
-      // enable center layout
+
       $('#main-content').addClass('login-active');
+
+      // LOGIN BUTTON CLICK
       $('#loginBtn').click(function () {
         const user = $('#loginUser').val().trim();
         const pass = $('#loginPass').val().trim();
 
-        // Very simple example (you can replace with AJAX later)
         if (user === "admin" && pass === "123") {
           localStorage.setItem("loggedIn", "true");
 
-          // Show sidebar IMMEDIATELY after logging in
           $('#mainSidebar').css({
             opacity: '1',
             transform: 'translateX(0)',
@@ -83,17 +83,20 @@ function loadPage(page) {
         }
         else {
           $('#loginError').removeClass('d-none');
-
-          // CLEAR BOTH FIELDS
           $('#loginUser').val('');
           $('#loginPass').val('');
-
-          // PUT CURSOR BACK ON USERNAME FIELD
           $('#loginUser').focus();
         }
+      });
 
+      // 👉 ENTER KEY SUBMIT ON PASSWORD FIELD
+      $('#loginPass').on('keypress', function (e) {
+        if (e.key === "Enter") {
+          $('#loginBtn').click();
+        }
       });
     }
+
     if (page !== 'pages/login.html') {
       $('#main-content').removeClass('login-active');
     }
